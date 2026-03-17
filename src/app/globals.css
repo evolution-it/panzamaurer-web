@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-hanken: var(--font-hanken);
+  --font-noto: var(--font-noto);
+  --font-inter: var(--font-inter);
+
+  --color-primary-red: #C02527;
+  --color-primary-dark: #231F20;
+  --color-oyster: #F0EEE3;
+  --color-dark-navy: #111827;
+  --color-dark-blue: #303d53;
+}
+
+
+@layer base {
+  body {
+    font-family: var(--font-noto), sans-serif;
+    background: #f3f4f6;
+    color: #030712;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-hanken), sans-serif;
+  }
+}
