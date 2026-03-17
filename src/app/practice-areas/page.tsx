@@ -40,9 +40,9 @@ const practiceAreas = [
       "Panza Maurer represents property owners, developers, lenders and other affected parties with land use.",
   },
   {
-    title: "Trusts & Estates",
+    title: "Estate Planning | Probate",
     description:
-      "Panza Maurer Law Firm Trusts & Estates practice attorneys know and have extensive experience in a wide variety of estate planning matters.",
+      "Panza Maurer Law Firm Estate Planning | Probate practice attorneys know and have extensive experience in a wide variety of estate planning matters.",
   },
   {
     title: "Technology | IT",
@@ -50,17 +50,12 @@ const practiceAreas = [
       "At Panza Maurer our practice is structured to provide diversified businesses regulatory service.",
   },
   {
-    title: "Intellectual Property",
-    description:
-      "Our intellectual property attorneys have extensive experience in client filing and procuring trademarks and copyrights.",
-  },
-  {
     title: "Education Law",
     description:
       "Panza Maurer provides comprehensive legal counsel to colleges, universities, and K\u201312 institutions across a broad spectrum of issues unique to the education sector.",
   },
   {
-    title: "Gaming & Hospitality",
+    title: "Gaming | Hospitality",
     description:
       "Panza Maurer Law Firm attorneys have a strong practice area in gaming law, drawing upon our expertise in administrative law.",
   },

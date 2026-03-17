@@ -491,7 +491,7 @@ const attorneyData: Record<
   "elizabeth-l-pedersen": {
     name: "Elizabeth L. Pedersen",
     firstName: "Elizabeth",
-    role: "Founding Partner",
+    role: "Partner",
     image: "elizabeth-l-pedersen.png",
     education: [
       "J.D. from University of Miami School of Law",
@@ -585,7 +585,7 @@ const attorneyData: Record<
   "jennifer-k-graner": {
     name: "Jennifer K. Graner",
     firstName: "Jennifer",
-    role: "Associate",
+    role: "Senior Associate",
     image: "jennifer-k-graner.png",
     education: [
       "B.A. in Finance from Florida Atlantic University (1987)",
@@ -993,7 +993,7 @@ const attorneyData: Record<
   "sandra-harris": {
     name: "Sandra Harris",
     firstName: "Sandra",
-    role: "Government Relations",
+    role: "Executive Vice President of Government Affairs",
     image: "sandra-harris.png",
     education: [],
     barAdmissions: [],

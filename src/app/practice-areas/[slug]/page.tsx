@@ -43,8 +43,8 @@ const practiceAreaData: Record<
     title: "Corporate | Transactional",
     heading: "Corporate & Transactional Law",
     content: [
-      "Legal skills and expertise in organizational structure and financial transactions to achieve client business goals. Panza Maurer provides comprehensive corporate counsel on entity formation, governance, mergers and acquisitions, joint ventures, and complex commercial transactions.",
-      "Our transactional attorneys draft, review, and negotiate a wide range of business agreements including purchase/sale agreements, operating agreements, shareholder agreements, commercial leases, and licensing arrangements. We focus on structuring deals that protect our clients' interests while achieving their strategic objectives.",
+      "Panza Maurer provides comprehensive counsel to businesses at every stage of growth. We advise clients on entity selection and formation in Florida, ongoing corporate administration, shareholder agreements, contract drafting and negotiation, corporate reporting, and policy development.",
+      "The firm’s transactional practice focuses on serving as general counsel for both for-profit and nonprofit entities and structuring and executing sophisticated business transactions, including mergers and acquisitions, and commercial and residential real estate transactions. With strategic planning and meticulous attention to detail, we help clients manage risk, protect their interests, and successfully complete transactions that advance their long-term business objectives.",
     ],
   },
   litigation: {
@@ -64,10 +64,10 @@ const practiceAreaData: Record<
     ],
   },
   "trusts--estates": {
-    title: "Trusts & Estates",
-    heading: "Trusts & Estate Planning",
+    title: "Estate Planning | Probate",
+    heading: "Estate Planning | Probate",
     content: [
-      "Panza Maurer Law Firm Trusts & Estates practice attorneys know and have extensive experience in a wide variety of estate planning matters. We provide personalized counsel on wills, trusts, powers of attorney, healthcare directives, and comprehensive estate plans.",
+      "Panza Maurer offers estate planning, administration, and probate services tailored to protect clients, their families, and their legacies. Our team has extensive experience drafting wills, trusts, pre- and post-marital agreements, health care directives, and Powers of Attorney. Our team has also represented numerous clients during probate proceedings, advocating for our client’s best interests when disputes arise.",
       "Our attorneys assist clients with wealth preservation strategies, business succession planning, probate administration, and trust management. We work to ensure that our clients' assets are protected and their wishes are carried out effectively.",
     ],
   },
@@ -79,26 +79,18 @@ const practiceAreaData: Record<
       "We assist clients in benchmarking policies, controls, and documentation against NIST-aligned standards and other recognized frameworks to support defensible, risk-based compliance programs. Through this integrated approach, we help organizations strengthen their security posture while aligning operational practices with evolving legal and regulatory expectations.",
     ],
   },
-  "intellectual-property": {
-    title: "Intellectual Property",
-    heading: "Intellectual Property Protection",
-    content: [
-      "Our intellectual property attorneys have extensive experience in client filing and procuring trademarks and copyrights. Panza Maurer assists businesses in identifying, protecting, and enforcing their intellectual property rights.",
-      "Our practice encompasses trademark registration and enforcement, copyright protection, trade secret litigation, licensing agreements, and IP due diligence in corporate transactions.",
-    ],
-  },
   "education-law": {
     title: "Education Law",
     heading: "Education Law",
     content: [
       "Panza Maurer provides comprehensive legal counsel to colleges, universities, and K\u201312 institutions across a broad spectrum of issues unique to the education sector. We advise on matters involving student and employee misconduct, accreditation, tenure and promotion, institutional governance, compliance with federal funding requirements, student-athlete issues, and employment concerns specific to educational environments.",
       "Our attorneys offer particular strength in proactive compliance and risk management, including student handbook review, employee policy development, and alignment with applicable state and federal laws. We routinely counsel institutions on compliance with the Americans with Disabilities Act and Section 504 of the Rehabilitation Act, Title IX, FERPA, the Clery Act, Title VI of the Civil Rights Act, and other federal and state anti-discrimination statutes, helping clients navigate complex regulatory frameworks with clarity and confidence.",
-      "The firm has also served as general counsel to major universities, providing strategic guidance at the highest levels of institutional leadership. From governance and long-term planning to regulatory investigations and dispute resolution, we partner with educational institutions to protect their missions and reputations. Our experience includes representing universities in matters before the U.S. Department of Education\u2019s Office for Civil Rights, conducting internal investigations, preparing institutional representatives for agency interviews, and defending related claims in administrative proceedings and litigation.",
+      "The firm has also served as general counsel to major universities, providing strategic guidance at the highest levels of institutional leadership. From governance and long-term planning to regulatory investigations and dispute resolution, we partner with educational institutions to protect their missions and reputations. Our experience includes representing universities in matters before the U.S. Department of Education's Office for Civil Rights, conducting internal investigations, preparing institutional representatives for agency interviews, and defending related claims in administrative proceedings and litigation.",
     ],
   },
   "gaming--hospitality": {
-    title: "Gaming & Hospitality",
-    heading: "Gaming & Hospitality Law",
+    title: "Gaming | Hospitality",
+    heading: "Gaming | Hospitality Law",
     content: [
       "Panza Maurer has represented lottery, gaming and hospitality clients in one of Florida's most highly regulated industries, with a concentrated focus on regulatory compliance, administrative advocacy, and legislative strategy. Our attorneys advise lottery operators worldwide, pari-mutuel operators, tribal entities, and hospitality businesses on licensing and permitting, statutory interpretation, rulemaking, and enforcement matters, helping clients navigate complex regulatory frameworks with clarity and confidence.",
       "We regularly advocate on behalf of clients before the Florida Department of Administrative Hearings, the First District Court of Appeal, and the Florida Supreme Court, and work closely with regulators, executive agencies, and legislative bodies to protect and advance our clients' interests. Our practice combines administrative depth and government relations insight to deliver strategic, effective regulatory representation.",
@@ -108,8 +100,9 @@ const practiceAreaData: Record<
     title: "Strategic Planning",
     heading: "Government Relations & Strategic Planning",
     content: [
-      "Panza Maurer Law Firm provides government relations consulting and strategic planning to firm clients. We help businesses and organizations develop comprehensive strategies for engaging with local, state, and federal government entities.",
-      "Our strategic planning services include legislative monitoring, policy analysis, coalition building, and advocacy campaign development. We leverage our extensive government relationships and deep understanding of the regulatory landscape to help clients achieve their strategic objectives.",
+      "Strategic planning is essential for organizations that want to grow, manage risk, and remain competitive in an increasingly complex regulatory environment. Panza Maurer works closely with business leaders, executives, and stakeholders to develop forward-looking strategies that align legal considerations with long-term organizational goals. By combining legal insight with practical business understanding, we help clients anticipate challenges, identify opportunities, and implement plans that support sustainable success.",
+      "A key part of our strategic planning approach is staying ahead of regulatory and policy developments at every level of government. Our attorneys continuously monitor changes in local ordinances, state legislation, and federal laws that may affect our clients’ industries and operations. By integrating these evolving requirements into our planning process, we help clients adapt proactively, minimize legal exposure, and make informed decisions in a shifting regulatory landscape.",
+      "Panza Maurer views strategic planning as an ongoing partnership rather than a one-time exercise. Our team collaborates with clients to review existing structures, assess potential risks, and refine strategies as business conditions and regulatory frameworks evolve. Whether guiding expansion initiatives, restructuring efforts, compliance planning, or governance improvements, we provide practical, legally sound guidance designed to position our clients for long-term stability and growth.",
     ],
   },
   "government-relations": {
@@ -249,7 +242,7 @@ export default async function PracticeAreaDetailPage({
                   },
                   {
                     name: "Sandra Harris",
-                    role: "Government Relations",
+                    role: "Executive Vice President of Government Affairs",
                     image: "sandra-harris.jpeg",
                     slug: "sandra-harris",
                   },
