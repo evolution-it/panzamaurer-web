@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import newsData from '@/data/news.json';
@@ -147,6 +148,45 @@ export default async function NewsArticlePage({
                 >
                   {post.content}
                 </ReactMarkdown>
+              </div>
+
+              {/* Back to News / News Archive */}
+              <div className="mt-12 flex items-center justify-between border-t border-gray-200 pt-8">
+                <Link
+                  href="/news"
+                  className="group inline-flex items-center gap-3 text-sm font-semibold text-gray-500 transition-colors hover:text-primary-red"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 transition-colors group-hover:border-primary-red group-hover:text-primary-red">
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5M12 5l-7 7 7 7" />
+                    </svg>
+                  </span>
+                  Back to News
+                </Link>
+
+                <Link
+                  href="/news/archive"
+                  className="group inline-flex items-center gap-3 text-sm font-semibold text-gray-500 transition-colors hover:text-primary-red"
+                >
+                  News Archive
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 transition-colors group-hover:border-primary-red group-hover:text-primary-red">
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </Link>
               </div>
             </div>
           </div>
