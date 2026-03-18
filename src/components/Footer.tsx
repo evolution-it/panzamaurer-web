@@ -33,7 +33,7 @@ const locationLinks = [
 export default function Footer() {
   return (
     <footer className="w-full bg-dark-navy">
-      <div className="mx-auto max-w-[1440px] px-8 py-20 lg:px-28 lg:py-32">
+      <div className="mx-auto max-w-[1440px] px-8 py-12 lg:px-28 lg:py-16">
         <div className="flex flex-col gap-20">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">

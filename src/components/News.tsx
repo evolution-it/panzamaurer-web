@@ -1,62 +1,21 @@
 import Image from "next/image";
+import Link from "next/link";
+import newsData from "@/data/news.json";
 
-const newsItems = [
-  {
-    title: "Client Alert: The One Big Beautiful Bill Act & Student Loans",
-    date: "December 12, 2025",
-    excerpt:
-      "The One Big Beautiful Bill Act (OBBBA) has created a significant financial hurdle for many undergraduate and graduate students across the country, due to its new regulations on student loan caps, reduction of repayment options, and increased compliance requirements for institutions of higher education.",
-    href: "https://www.panzamaurer.com/client-alert-the-one-big-beautiful-bill-act-student-loans/",
-  },
-  {
-    title: "Eileen Stuart and David Childs Join Panza Maurer as Of Counsel",
-    date: "November 19, 2025",
-    excerpt:
-      "Panza Maurer proudly announces the addition of Eileen Stuart and David Childs as Of Counsel to the firm, bringing extensive expertise in government relations, policy development, and strategic communications.",
-    href: "https://www.panzamaurer.com/eileen-stuart-and-david-childs-join-panza-maurer-as-of-counsel/",
-  },
-  {
-    title: "Founding Partners Present at University of Rome Medical School",
-    date: "November 12, 2025",
-    excerpt:
-      "Panza Maurer's founding partners recently visited the Università Campus Bio-Medico di Roma, an institution established with a vision to place the human person at the heart of biomedical sciences, to explore its mission and connect with staff and students.",
-    href: "https://www.panzamaurer.com/panza-maurer-founding-partners-present-at-university-of-rome-medical-school/",
-  },
-  {
-    title:
-      "Panza Maurer Partners Recognized in Florida Trend's 2025 Legal Elite Notable – Women Leaders in Law",
-    date: "November 12, 2025",
-    excerpt:
-      "Congratulations to Panza Maurer Managing Partner, Dana Panza Macdonald, and Partner, Elizabeth Pedersen, on their recognition in Florida Trend Media Company's Legal Elite Notable — Women Leaders in Law. Their leadership, mentorship, and commitment to community impact exemplify the excellence that defines our firm and Florida's legal community.",
-    href: "https://www.panzamaurer.com/panza-mauerer-partners-recognized-in-florida-trends-2025-legal-elite-notable-women-leaders-in-law/",
-  },
-  {
-    title: "Panza Maurer – A Sponsor of the 2025 Guy Harvey Foundation Love the Blue Gala",
-    date: "November 7, 2025",
-    excerpt:
-      "Panza Maurer was honored to sponsor and attend the 2025 Guy Harvey Foundation Love the Blue Gala, an inspiring evening dedicated to ocean conservation and education. The firm's team participated alongside Guy Harvey and Jessica Harvey, joining supporters committed to marine ecosystem protection.",
-    href: "https://www.panzamaurer.com/35288-2/",
-  },
-  {
-    title:
-      "Panza Maurer Participates in the 9th Annual Marine Research Hub of South Florida Summit at FLIBS",
-    date: "November 6, 2025",
-    excerpt:
-      "Panza Maurer was proud to participate in the 9th Annual Marine Research Hub of South Florida Summit, held in conjunction with the Fort Lauderdale International Boat Show (FLIBS). This event brought together leaders from academia, industry, and government to explore groundbreaking innovations shaping the future of our oceans and coastal communities.",
-    href: "https://www.panzamaurer.com/panza-maurer-participates-in-the-9th-annual-marine-research-hub-of-south-florida-summit-at-flibs/",
-  },
-];
+const newsItems = [...newsData.articles]
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 3);
 
 function NewsCard({
   title,
   date,
   excerpt,
-  href,
+  slug,
 }: {
   title: string;
   date: string;
   excerpt: string;
-  href: string;
+  slug: string;
 }) {
   return (
     <div className="flex flex-1 flex-col rounded-2xl border border-gray-700 bg-gray-800/60 backdrop-blur-sm">
@@ -70,10 +29,8 @@ function NewsCard({
         <p className="font-[family-name:var(--font-noto)] text-base font-normal leading-6 text-gray-300">
           {excerpt}
         </p>
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href={`/news/${slug}`}
           className="mt-2 inline-flex items-center gap-2 font-[family-name:var(--font-noto)] text-lg font-medium leading-7 text-red-500 transition-colors hover:text-red-400"
         >
           Read
@@ -83,7 +40,7 @@ function NewsCard({
             width={16}
             height={16}
           />
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -129,13 +86,6 @@ export default function News() {
         <div className="mt-8 flex flex-col gap-8 lg:flex-row">
           <NewsCard {...newsItems[1]} />
           <NewsCard {...newsItems[2]} />
-        </div>
-
-        {/* Row 3: Three cards */}
-        <div className="mt-8 flex flex-col gap-8 lg:flex-row">
-          <NewsCard {...newsItems[3]} />
-          <NewsCard {...newsItems[4]} />
-          <NewsCard {...newsItems[5]} />
         </div>
       </div>
     </section>
