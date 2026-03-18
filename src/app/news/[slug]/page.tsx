@@ -86,17 +86,15 @@ export default async function NewsArticlePage({
               {images.length > 0 && (
                 <div className='mb-10 flex flex-col gap-6'>
                   {images.map((src, i) => (
-                    <div
+                    <Image
                       key={i}
-                      className='relative h-[300px] overflow-hidden rounded-lg md:h-[400px]'
-                    >
-                      <Image
-                        src={src}
-                        alt={`${post.title} image ${i + 1}`}
-                        fill
-                        className='object-cover'
-                      />
-                    </div>
+                      src={src}
+                      alt={`${post.title} image ${i + 1}`}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className='h-auto w-full rounded-lg'
+                    />
                   ))}
                 </div>
               )}
