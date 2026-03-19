@@ -25,7 +25,6 @@ const partners: Attorney[] = [
   { name: "Jose Felix Diaz", role: "Partner", image: "jose-felix-diaz.png" },
   { name: "Lorraine Duthe", role: "Partner", image: "lorraine-duthe.png" },
   { name: "James H. Horton, IV", role: "Partner", image: "james-h-horton-iv.png" },
-  { name: "Pamela M. Kane", role: "Partner", image: "pamela-kane.png" },
   { name: "Gregory L. McDermott", role: "Partner", image: "gregory-l-mcdermott.png" },
   { name: "Elizabeth L. Pedersen", role: "Partner", image: "elizabeth-l-pedersen.png" },
   { name: "Louise Wilhite St. Laurent", role: "Partner", image: "louise-wilhite-st-laurent.png" },
@@ -33,6 +32,7 @@ const partners: Attorney[] = [
   { name: "Jennifer K. Graner", role: "Senior Associate", image: "jennifer-k-graner.png" },
   { name: "Andrew L. Myers", role: "Senior Associate", image: "andrew-l-myers.png" },
   { name: "Trevor D. Scott", role: "Senior Associate", image: "trevor-d-scott.png" },
+  { name: "Julia C. Marano", role: "Associate", image: "julia-marano.png" },
 ];
 
 const ofCounsel: Attorney[] = [
