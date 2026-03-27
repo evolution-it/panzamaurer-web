@@ -1,25 +1,92 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import PracticeAreas from "@/components/PracticeAreas";
-import Team from "@/components/Team";
-import News from "@/components/News";
-import Locations from "@/components/Locations";
-import Footer from "@/components/Footer";
+import Navbar from '@/components/Navbar'
+import Hero from '@/components/Hero'
+import About from '@/components/About'
+import PracticeAreas from '@/components/PracticeAreas'
+import Team, { TeamMember } from '@/components/Team'
+import News from '@/components/News'
+import Locations from '@/components/Locations'
+import Footer from '@/components/Footer'
+import { client } from '@/sanity/client'
+import { urlFor } from '@/sanity/image'
+import { TEAM_ATTORNEYS_QUERY } from '@/sanity/queries/attorneys'
+import { HOME_PAGE_QUERY } from '@/sanity/queries/pages'
 
-export default function Home() {
+type RawTeamMember = TeamMember & {
+  image?: { asset: { _ref: string } } | null
+}
+
+type SanityLocation = {
+  _id: string
+  name: string
+  image?: { asset: { _ref: string } } | null
+  order: number
+}
+
+type PageSection = {
+  _type: string
+  _key: string
+  heading?: string
+  attorneys?: RawTeamMember[]
+  locations?: SanityLocation[]
+  articleCount?: number
+}
+
+type HomePageConfig = {
+  _id: string
+  sections?: PageSection[]
+}
+
+function toTeamMembers(raw: RawTeamMember[]): TeamMember[] {
+  return raw.map((m) => ({
+    ...m,
+    imageUrl: m.image ? urlFor(m.image).width(600).height(800).url() : null,
+  }))
+}
+
+export default async function Home() {
+  const pageConfig: HomePageConfig | null = await client
+    .fetch(HOME_PAGE_QUERY, {}, { next: { tags: ['pages'] } })
+    .catch(() => null)
+
+  const sections = pageConfig?.sections ?? []
+
+  // ── Team section ────────────────────────────────────────────────────────────
+  const teamSection = sections.find((s) => s._type === 'teamSection')
+  let teamMembers: TeamMember[]
+
+  if (teamSection?.attorneys && teamSection.attorneys.length > 0) {
+    teamMembers = toTeamMembers(teamSection.attorneys)
+  } else {
+    // Fallback: fetch by query if page config is missing
+    const rawTeam: RawTeamMember[] = await client
+      .fetch(TEAM_ATTORNEYS_QUERY, {}, { next: { tags: ['attorneys'] } })
+      .catch(() => [])
+    teamMembers = toTeamMembers(rawTeam)
+  }
+
+  // ── News section ─────────────────────────────────────────────────────────────
+  const newsSection = sections.find((s) => s._type === 'newsSection')
+  const newsCount = newsSection?.articleCount ?? 3
+
+  // ── Locations section ────────────────────────────────────────────────────────
+  const locationsSection = sections.find((s) => s._type === 'locationsSection')
+  const preloadedLocations =
+    locationsSection?.locations && locationsSection.locations.length > 0
+      ? locationsSection.locations
+      : undefined
+
   return (
-    <div className="flex min-h-screen flex-col items-center">
+    <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className="w-full">
+      <main className='w-full'>
         <Hero />
         <About />
         <PracticeAreas />
-        <Team />
-        <News />
-        <Locations />
+        <Team teamMembers={teamMembers} />
+        <News count={newsCount} />
+        <Locations preloadedLocations={preloadedLocations} />
       </main>
       <Footer />
     </div>
-  );
+  )
 }
