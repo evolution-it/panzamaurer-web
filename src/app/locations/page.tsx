@@ -1,123 +1,146 @@
-import Image from "next/image";
-import Navbar from "@/components/Navbar";
-import PageHero from "@/components/PageHero";
-import Footer from "@/components/Footer";
+import Image from 'next/image'
+import Navbar from '@/components/Navbar'
+import PageHero from '@/components/PageHero'
+import Footer from '@/components/Footer'
+import { client, getDraftClient } from '@/sanity/client'
+import { urlFor } from '@/sanity/image'
+import { LOCATIONS_QUERY } from '@/sanity/queries/locations'
+import { PAGE_BY_SLUG_QUERY } from '@/sanity/queries/pages'
+import { draftMode } from 'next/headers'
 
 export const metadata = {
-  title: "Locations | Panza Maurer",
-};
+  title: 'Locations | Panza Maurer',
+}
 
-const offices = [
-  {
-    name: "Tallahassee",
-    image: "/images/contact-tallahassee.jpg",
-    address: "201 East Park Avenue | Suite 200-A",
-    city: "Tallahassee, FL 32301",
-    phone: "(850) 681-0980 (T)",
-    fax: "(850) 681-0983 (F)",
-  },
-  {
-    name: "Fort Lauderdale",
-    image: "/images/contact-fort-lauderdale.jpg",
-    building: "Coastal Tower",
-    address: "2400 East Commercial Blvd | Suite 905",
-    city: "Fort Lauderdale, FL 33308",
-    phone: "(954) 390-0100 (T)",
-    fax: "(954) 390-7991 (F)",
-  },
-  {
-    name: "Coral Gables",
-    image: "/images/contact-coral-gables.jpg",
-    building: "The Alhambra Building",
-    address: "2 Alhambra Plaza | Suite 102",
-    city: "Coral Gables, FL 33134",
-    phone: "(786) 534-6162 (T)",
-  },
-];
+type Location = {
+  _id: string
+  name: string
+  slug: { current: string }
+  image?: { asset: { _ref: string } } | null
+  building?: string
+  address?: string[]
+  city?: string
+  phone?: string
+  fax?: string
+  order: number
+}
 
-export default function LocationsPage() {
+type PageSection = {
+  _type: string
+  locations?: Location[]
+}
+
+type PageConfig = { sections?: PageSection[] }
+
+export default async function LocationsPage() {
+  const { isEnabled } = await draftMode()
+  const sanityClient = isEnabled ? getDraftClient() : client
+  const fetchOptions = isEnabled
+    ? { cache: 'no-store' as const }
+    : { next: { tags: ['locations', 'pages'] } }
+
+  // Use page config ordering/selection if available, otherwise all locations
+  const pageConfig: PageConfig | null = await sanityClient
+    .fetch(PAGE_BY_SLUG_QUERY, { slug: 'locations' }, fetchOptions)
+    .catch(() => null)
+
+  const locationsSection = pageConfig?.sections?.find((s) => s._type === 'locationsSection')
+  const offices: Location[] =
+    locationsSection?.locations && locationsSection.locations.length > 0
+      ? locationsSection.locations
+      : await sanityClient.fetch(LOCATIONS_QUERY, {}, fetchOptions).catch(() => [])
+
   return (
-    <div className="flex min-h-screen flex-col items-center">
+    <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className="w-full pt-[145px] lg:pt-[109px]">
+      <main className='w-full pt-[145px] lg:pt-[109px]'>
         <PageHero
-          title="Our Locations"
+          title='Our Locations'
           breadcrumbs={[
-            { label: "Home", href: "/" },
-            { label: "Locations" },
+            { label: 'Home', href: '/' },
+            { label: 'Locations' },
           ]}
         />
 
-        <section className="bg-white">
-          <div className="mx-auto max-w-[1440px] px-8 py-16 lg:px-28">
-            <div className="flex flex-col gap-20">
-              {offices.map((office, index) => (
-                <div
-                  key={office.name}
-                  className="flex flex-col gap-10 lg:flex-row lg:items-start"
-                >
-                  {/* Image */}
-                  <div className="relative h-[280px] w-full overflow-hidden rounded-[10px] lg:w-[400px]">
-                    <Image
-                      src={office.image}
-                      alt={office.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+        <section className='bg-white'>
+          <div className='mx-auto max-w-[1440px] px-8 py-16 lg:px-28'>
+            <div className='flex flex-col gap-20'>
+              {offices.map((office) => {
+                const imgSrc = office.image
+                  ? urlFor(office.image).width(800).height(560).url()
+                  : null
 
-                  {/* Info */}
-                  <div className="flex flex-1 flex-col gap-4">
-                    <h2 className="font-[family-name:var(--font-hanken)] text-3xl font-semibold text-slate-600 lg:text-[42px] lg:leading-[50px]">
-                      {office.name}
-                    </h2>
-                    <Image
-                      src="/images/underline-1.svg"
-                      alt=""
-                      width={168}
-                      height={4}
-                    />
-
-                    <div className="mt-2 flex flex-col gap-1">
-                      <div className="flex items-start gap-3">
+                return (
+                  <div
+                    key={office._id}
+                    className='flex flex-col gap-10 lg:flex-row lg:items-start'
+                  >
+                    {/* Image */}
+                    <div className='relative h-[280px] w-full overflow-hidden rounded-[10px] lg:w-[400px]'>
+                      {imgSrc ? (
                         <Image
-                          src="/images/location-pin.svg"
-                          alt=""
-                          width={18}
-                          height={18}
-                          className="mt-1"
+                          src={imgSrc}
+                          alt={office.name}
+                          fill
+                          className='object-cover'
                         />
-                        <div>
-                          {office.building && (
-                            <p className="font-semibold text-gray-950">
-                              {office.building}
-                            </p>
-                          )}
-                          <p className="font-semibold text-gray-950">
-                            {office.address}
-                          </p>
-                          <p className="font-semibold text-gray-950">
-                            {office.city}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="mt-3 flex flex-col gap-1 pl-[30px]">
-                        <p className="text-gray-950">{office.phone}</p>
-                        {office.fax && (
-                          <p className="text-gray-950">{office.fax}</p>
-                        )}
-                      </div>
+                      ) : (
+                        <div className='h-full bg-slate-100' />
+                      )}
                     </div>
 
+                    {/* Info */}
+                    <div className='flex flex-1 flex-col gap-4'>
+                      <h2 className='font-[family-name:var(--font-hanken)] text-3xl font-semibold text-slate-600 lg:text-[42px] lg:leading-[50px]'>
+                        {office.name}
+                      </h2>
+                      <Image
+                        src='/images/underline-1.svg'
+                        alt=''
+                        width={168}
+                        height={4}
+                      />
+
+                      <div className='mt-2 flex flex-col gap-1'>
+                        <div className='flex items-start gap-3'>
+                          <Image
+                            src='/images/location-pin.svg'
+                            alt=''
+                            width={18}
+                            height={18}
+                            className='mt-1'
+                          />
+                          <div>
+                            {office.building && (
+                              <p className='font-semibold text-gray-950'>{office.building}</p>
+                            )}
+                            {office.address?.map((line, i) => (
+                              <p key={i} className='font-semibold text-gray-950'>{line}</p>
+                            ))}
+                            {office.city && (
+                              <p className='font-semibold text-gray-950'>{office.city}</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className='mt-3 flex flex-col gap-1 pl-[30px]'>
+                          {office.phone && (
+                            <p className='text-gray-950'>{office.phone} (T)</p>
+                          )}
+                          {office.fax && (
+                            <p className='text-gray-950'>{office.fax} (F)</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </section>
       </main>
       <Footer />
     </div>
-  );
+  )
 }
