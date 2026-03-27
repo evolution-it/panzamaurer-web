@@ -401,3 +401,5 @@ scripts/
 | Add/archive/delete pages tied to navigation | `page` document with `showInNavigation` + `siteSettings` nav array |
 | Preview before publishing | Next.js Draft Mode + Sanity Presentation live preview |
 | Track updates by user, revert to previous | Sanity built-in document history with per-user attribution and restore |
+
+Initial Implementation: 03/27/2026
