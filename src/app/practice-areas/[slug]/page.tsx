@@ -109,7 +109,7 @@ export default async function PracticeAreaDetailPage({
                 Our {area.title} Team
               </h2>
               <div className='grid grid-cols-1 justify-items-center gap-8 sm:grid-cols-2 lg:grid-cols-3'>
-                {area.featuredAttorneys.map((member) => {
+                {area.featuredAttorneys.filter((m) => m != null && m.slug?.current).map((member) => {
                   const imgSrc = member.image
                     ? urlFor(member.image).width(600).height(600).url()
                     : null
