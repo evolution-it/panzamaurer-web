@@ -21,27 +21,6 @@ export default defineConfig({
           .title('Content')
           .items([
             S.listItem()
-              .title('Attorneys')
-              .schemaType('attorney')
-              .child(S.documentTypeList('attorney').title('Attorneys')),
-            S.listItem()
-              .title('Locations')
-              .schemaType('location')
-              .child(S.documentTypeList('location').title('Locations')),
-            S.listItem()
-              .title('News Articles')
-              .schemaType('newsArticle')
-              .child(S.documentTypeList('newsArticle').title('News Articles')),
-            S.listItem()
-              .title('Practice Areas')
-              .schemaType('practiceArea')
-              .child(S.documentTypeList('practiceArea').title('Practice Areas')),
-            S.listItem()
-              .title('Pages')
-              .schemaType('page')
-              .child(S.documentTypeList('page').title('Pages')),
-            S.divider(),
-            S.listItem()
               .title('Site Settings')
               .id('siteSettings')
               .child(
@@ -49,6 +28,28 @@ export default defineConfig({
                   .schemaType('siteSettings')
                   .documentId('siteSettings'),
               ),
+            S.divider(),
+            S.listItem()
+              .title('Pages')
+              .schemaType('page')
+              .child(S.documentTypeList('page').title('Pages')),
+            S.divider(),
+            S.listItem()
+              .title('News Articles')
+              .schemaType('newsArticle')
+              .child(S.documentTypeList('newsArticle').title('News Articles')),
+            S.listItem()
+              .title('Attorneys')
+              .schemaType('attorney')
+              .child(S.documentTypeList('attorney').title('Attorneys')),
+            S.listItem()
+              .title('Practice Areas')
+              .schemaType('practiceArea')
+              .child(S.documentTypeList('practiceArea').title('Practice Areas')),
+            S.listItem()
+              .title('Locations')
+              .schemaType('location')
+              .child(S.documentTypeList('location').title('Locations')),
           ]),
     }),
     presentationTool({
