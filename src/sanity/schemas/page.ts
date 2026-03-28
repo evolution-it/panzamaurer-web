@@ -58,14 +58,66 @@ export const page = defineType({
           title: 'Hero Banner',
           fields: [
             defineField({ name: 'heading', title: 'Heading', type: 'string' }),
+            defineField({
+              name: 'boldPrefix',
+              title: 'Bold Prefix',
+              description: 'Optional bold text shown before the subtitle (e.g. "For more than five decades,")',
+              type: 'string',
+            }),
             defineField({ name: 'subtitle', title: 'Subtitle / Body', type: 'text', rows: 2 }),
             defineField({ name: 'ctaLabel', title: 'Button Label', type: 'string' }),
             defineField({ name: 'ctaHref', title: 'Button URL', type: 'string' }),
+            defineField({
+              name: 'videos',
+              title: 'Background Videos',
+              description: 'Upload .mp4 files to cycle as the hero background. Falls back to built-in videos if empty.',
+              type: 'array',
+              of: [defineArrayMember({ type: 'file', options: { accept: 'video/mp4,video/quicktime' } })],
+            }),
           ],
           preview: {
             select: { heading: 'heading', subtitle: 'subtitle' },
             prepare({ heading, subtitle }) {
               return { title: heading || 'Hero Banner', subtitle }
+            },
+          },
+        }),
+
+        // ── About / Intro ────────────────────────────────────────────────────
+        defineArrayMember({
+          type: 'object',
+          name: 'aboutSection',
+          title: 'About / Intro',
+          fields: [
+            defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'About Our Firm' }),
+            defineField({ name: 'image', title: 'Image', type: 'image', options: { hotspot: true } }),
+            defineField({ name: 'quote', title: 'Mission Statement / Quote', type: 'text', rows: 3 }),
+            defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 6 }),
+          ],
+          preview: {
+            select: { heading: 'heading' },
+            prepare({ heading }) {
+              return { title: heading || 'About Section' }
+            },
+          },
+        }),
+
+        // ── CTA / Get in Touch ───────────────────────────────────────────────
+        defineArrayMember({
+          type: 'object',
+          name: 'ctaSection',
+          title: 'Call to Action',
+          fields: [
+            defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'Get in Touch' }),
+            defineField({ name: 'subtitle', title: 'Subtitle (large)', type: 'text', rows: 2 }),
+            defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 3 }),
+            defineField({ name: 'ctaLabel', title: 'Button Label', type: 'string', initialValue: 'Meet Our Team' }),
+            defineField({ name: 'ctaHref', title: 'Button URL', type: 'string', initialValue: '/attorneys' }),
+          ],
+          preview: {
+            select: { heading: 'heading', subtitle: 'subtitle' },
+            prepare({ heading, subtitle }) {
+              return { title: heading || 'CTA Section', subtitle }
             },
           },
         }),

@@ -3,11 +3,10 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import PageHero from '@/components/PageHero'
 import Footer from '@/components/Footer'
-import { client, getDraftClient } from '@/sanity/client'
+import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { ATTORNEYS_LIST_QUERY } from '@/sanity/queries/attorneys'
 import { PAGE_BY_SLUG_QUERY } from '@/sanity/queries/pages'
-import { draftMode } from 'next/headers'
 
 export const metadata = {
   title: 'Our Attorneys | Panza Maurer',
@@ -106,19 +105,14 @@ function AttorneyGroup({
 }
 
 export default async function AttorneysPage() {
-  const { isEnabled } = await draftMode()
-  const sanityClient = isEnabled ? getDraftClient() : client
-  const fetchOptions = isEnabled
-    ? { cache: 'no-store' as const }
-    : { next: { tags: ['attorneys', 'pages'] } }
+  const { sanityClient, cacheTags } = await getDraftModeClient()
 
-  // Fetch page config and full attorney list in parallel
   const [pageConfig, allAttorneys] = await Promise.all([
     sanityClient
-      .fetch<PageConfig>(PAGE_BY_SLUG_QUERY, { slug: 'attorneys' }, fetchOptions)
+      .fetch<PageConfig>(PAGE_BY_SLUG_QUERY, { slug: 'attorneys' }, cacheTags(['attorneys', 'pages']))
       .catch(() => null),
     sanityClient
-      .fetch<AttorneyListItem[]>(ATTORNEYS_LIST_QUERY, {}, fetchOptions)
+      .fetch<AttorneyListItem[]>(ATTORNEYS_LIST_QUERY, {}, cacheTags(['attorneys']))
       .catch(() => [] as AttorneyListItem[]),
   ])
 
@@ -161,13 +155,7 @@ export default async function AttorneysPage() {
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
       <main className='w-full pt-[145px] lg:pt-[109px]'>
-        <PageHero
-          title='Our Attorneys'
-          breadcrumbs={[
-            { label: 'Home', href: '/' },
-            { label: 'Our Attorneys' },
-          ]}
-        />
+        <PageHero title='Our Attorneys' />
 
         {sections.map((section, index) => (
           <AttorneyGroup

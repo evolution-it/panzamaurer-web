@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { groq } from 'next-sanity'
 import { client } from '@/sanity/client'
+import { HOME_NEWS_QUERY } from '@/sanity/queries/news'
 
 type NewsItem = {
   _id: string
@@ -44,14 +44,8 @@ function NewsCard({ title, date, excerpt, slug }: NewsItem) {
 }
 
 export default async function News({ count = 3 }: { count?: number }) {
-  const query = groq`
-    *[_type == "newsArticle" && status == "published"] | order(date desc) [0...$count] {
-      _id, title, slug, date, excerpt,
-      listingImages[] { asset-> }
-    }
-  `
   const newsItems: NewsItem[] = await client
-    .fetch(query, { count }, { next: { tags: ['news'] } })
+    .fetch(HOME_NEWS_QUERY, { count }, { next: { tags: ['news'] } })
     .catch(() => [])
 
   if (newsItems.length === 0) return null

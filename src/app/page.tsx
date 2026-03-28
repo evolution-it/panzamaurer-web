@@ -5,6 +5,7 @@ import PracticeAreas from '@/components/PracticeAreas'
 import Team, { TeamMember } from '@/components/Team'
 import News from '@/components/News'
 import Locations from '@/components/Locations'
+import GetInTouch from '@/components/GetInTouch'
 import Footer from '@/components/Footer'
 import { client } from '@/sanity/client'
 import { urlFor } from '@/sanity/image'
@@ -22,12 +23,31 @@ type SanityLocation = {
   order: number
 }
 
+type SanityImage = {
+  asset: { _ref?: string; url?: string }
+}
+
+type PracticeAreaItem = {
+  _id: string
+  title: string
+  slug: { current: string }
+}
+
 type PageSection = {
   _type: string
   _key: string
   heading?: string
+  boldPrefix?: string
+  subtitle?: string
+  body?: string
+  quote?: string
+  image?: SanityImage | null
+  ctaLabel?: string
+  ctaHref?: string
+  videos?: { url: string }[]
   attorneys?: RawTeamMember[]
   locations?: SanityLocation[]
+  practiceAreas?: PracticeAreaItem[]
   articleCount?: number
 }
 
@@ -50,41 +70,72 @@ export default async function Home() {
 
   const sections = pageConfig?.sections ?? []
 
-  // ── Team section ────────────────────────────────────────────────────────────
+  // ── Hero section ─────────────────────────────────────────────────────────────
+  const heroSection = sections.find((s) => s._type === 'heroSection')
+  const heroVideos = heroSection?.videos?.map((v) => v.url).filter(Boolean) as string[] | undefined
+
+  // ── About section ─────────────────────────────────────────────────────────────
+  const aboutSection = sections.find((s) => s._type === 'aboutSection')
+  const aboutImageUrl = aboutSection?.image
+    ? urlFor(aboutSection.image).width(500).height(600).url()
+    : undefined
+
+  // ── Practice Areas section ────────────────────────────────────────────────────
+  const practiceAreasSection = sections.find((s) => s._type === 'practiceAreasSection')
+
+  // ── Team section ─────────────────────────────────────────────────────────────
   const teamSection = sections.find((s) => s._type === 'teamSection')
   let teamMembers: TeamMember[]
 
   if (teamSection?.attorneys && teamSection.attorneys.length > 0) {
     teamMembers = toTeamMembers(teamSection.attorneys)
   } else {
-    // Fallback: fetch by query if page config is missing
     const rawTeam: RawTeamMember[] = await client
       .fetch(TEAM_ATTORNEYS_QUERY, {}, { next: { tags: ['attorneys'] } })
       .catch(() => [])
     teamMembers = toTeamMembers(rawTeam)
   }
 
-  // ── News section ─────────────────────────────────────────────────────────────
+  // ── News section ──────────────────────────────────────────────────────────────
   const newsSection = sections.find((s) => s._type === 'newsSection')
   const newsCount = newsSection?.articleCount ?? 3
 
-  // ── Locations section ────────────────────────────────────────────────────────
+  // ── Locations section ─────────────────────────────────────────────────────────
   const locationsSection = sections.find((s) => s._type === 'locationsSection')
   const preloadedLocations =
     locationsSection?.locations && locationsSection.locations.length > 0
       ? locationsSection.locations
       : undefined
 
+  // ── CTA section ───────────────────────────────────────────────────────────────
+  const ctaSection = sections.find((s) => s._type === 'ctaSection')
+
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
       <main className='w-full'>
-        <Hero />
-        <About />
-        <PracticeAreas />
+        <Hero
+          heading={heroSection?.heading ?? undefined}
+          subtitle={heroSection?.subtitle ?? undefined}
+          videos={heroVideos}
+        />
+        <About
+          heading={aboutSection?.heading ?? undefined}
+          quote={aboutSection?.quote ?? undefined}
+          body={aboutSection?.body ?? undefined}
+          imageUrl={aboutImageUrl}
+        />
+        <PracticeAreas areas={practiceAreasSection?.practiceAreas ?? undefined} />
         <Team teamMembers={teamMembers} />
         <News count={newsCount} />
         <Locations preloadedLocations={preloadedLocations} />
+        <GetInTouch
+          heading={ctaSection?.heading ?? undefined}
+          subtitle={ctaSection?.subtitle ?? undefined}
+          body={ctaSection?.body ?? undefined}
+          ctaLabel={ctaSection?.ctaLabel ?? undefined}
+          ctaHref={ctaSection?.ctaHref ?? undefined}
+        />
       </main>
       <Footer />
     </div>

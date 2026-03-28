@@ -12,8 +12,10 @@ type Location = {
 
 export default async function Locations({
   preloadedLocations,
+  variant = 'default',
 }: {
   preloadedLocations?: Location[]
+  variant?: 'default' | 'grayscale'
 }) {
   const locations: Location[] =
     preloadedLocations ??
@@ -21,19 +23,19 @@ export default async function Locations({
       .fetch(LOCATIONS_QUERY, {}, { next: { tags: ['locations'] } })
       .catch(() => []))
 
+  const isGrayscale = variant === 'grayscale'
+
   return (
-    <section id='locations' className='w-full bg-[#f3f4f6]'>
-      <div className='mx-auto max-w-[1216px] px-8 py-20 lg:py-40'>
-        <div className='flex flex-col items-center gap-20'>
-          {/* Heading */}
+    <section id='locations' className={`w-full ${isGrayscale ? 'bg-white' : 'bg-[#f3f4f6]'}`}>
+      <div className='mx-auto max-w-[1216px] px-4 py-20 sm:px-8 lg:py-40'>
+        <div className='flex flex-col items-center gap-12 lg:gap-20'>
           <div className='flex flex-col items-center gap-3'>
-            <h2 className='font-[family-name:var(--font-hanken)] text-4xl font-semibold tracking-tight text-gray-950 lg:text-[52px] lg:leading-[1.6]'>
+            <h2 className='text-center font-[family-name:var(--font-hanken)] text-3xl font-semibold tracking-tight text-gray-950 sm:text-4xl lg:text-[52px] lg:leading-[1.6]'>
               Our Locations
             </h2>
             <Image src='/images/underline-2.svg' alt='' width={122} height={4} />
           </div>
 
-          {/* Location Cards */}
           <div className='flex w-full flex-col gap-0.5 lg:flex-row'>
             {locations.map((location, index) => {
               const imgSrc = location.image
@@ -52,24 +54,38 @@ export default async function Locations({
                       src={imgSrc}
                       alt={location.name}
                       fill
-                      className='object-cover transition-transform duration-500 group-hover:scale-105'
+                      className={`object-cover transition-all duration-500 group-hover:scale-105 ${
+                        isGrayscale ? 'grayscale group-hover:grayscale-0' : ''
+                      }`}
                     />
                   ) : (
                     <div className='h-full bg-slate-200' />
                   )}
-                  {/* Dark overlay */}
-                  <div
-                    className='absolute inset-0 transition-opacity duration-500 group-hover:opacity-0'
-                    style={{ background: 'rgba(17, 24, 39, 0.52)' }}
-                  />
-                  {/* Bottom gradient */}
-                  <div
-                    className='absolute inset-0'
-                    style={{
-                      background:
-                        'linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)',
-                    }}
-                  />
+
+                  {isGrayscale ? (
+                    <div
+                      className='absolute inset-0'
+                      style={{
+                        background:
+                          'linear-gradient(180deg, rgba(0,0,0,0) 7.8%, rgba(0,0,0,0.4) 100%)',
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <div
+                        className='absolute inset-0 transition-opacity duration-500 group-hover:opacity-0'
+                        style={{ background: 'rgba(17, 24, 39, 0.52)' }}
+                      />
+                      <div
+                        className='absolute inset-0'
+                        style={{
+                          background:
+                            'linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)',
+                        }}
+                      />
+                    </>
+                  )}
+
                   <div className='absolute inset-x-0 bottom-0 p-6'>
                     <p className='font-[family-name:var(--font-noto)] text-2xl font-medium leading-10 text-white'>
                       {location.name}

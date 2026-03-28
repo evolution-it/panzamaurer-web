@@ -2,14 +2,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { client, getDraftClient } from '@/sanity/client'
+import { client } from '@/sanity/client'
+import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import {
   PRACTICE_AREA_BY_SLUG_QUERY,
   PRACTICE_AREAS_LIST_QUERY,
   PRACTICE_AREA_SLUGS_QUERY,
 } from '@/sanity/queries/practiceAreas'
-import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 type PracticeAreaDetail = {
@@ -35,7 +35,7 @@ type PracticeAreaListItem = {
 }
 
 export async function generateStaticParams() {
-  const slugs: string[] = await client.fetch(PRACTICE_AREA_SLUGS_QUERY)
+  const slugs: string[] = await client.fetch(PRACTICE_AREA_SLUGS_QUERY).catch(() => [])
   return slugs.map((slug) => ({ slug }))
 }
 
@@ -53,15 +53,11 @@ export default async function PracticeAreaDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const { isEnabled } = await draftMode()
-  const sanityClient = isEnabled ? getDraftClient() : client
-  const fetchOptions = isEnabled
-    ? { cache: 'no-store' as const }
-    : { next: { tags: ['practiceAreas'] } }
+  const { sanityClient, cacheTags } = await getDraftModeClient()
 
   const [area, allAreas] = await Promise.all([
-    sanityClient.fetch<PracticeAreaDetail | null>(PRACTICE_AREA_BY_SLUG_QUERY, { slug }, fetchOptions),
-    sanityClient.fetch<PracticeAreaListItem[]>(PRACTICE_AREAS_LIST_QUERY, {}, fetchOptions),
+    sanityClient.fetch<PracticeAreaDetail | null>(PRACTICE_AREA_BY_SLUG_QUERY, { slug }, cacheTags(['practiceAreas'])),
+    sanityClient.fetch<PracticeAreaListItem[]>(PRACTICE_AREAS_LIST_QUERY, {}, cacheTags(['practiceAreas'])),
   ])
 
   if (!area) {

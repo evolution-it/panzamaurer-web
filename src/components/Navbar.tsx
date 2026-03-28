@@ -35,6 +35,7 @@ const FALLBACK_PRACTICE_AREAS: PracticeAreaLink[] = [
 
 type SiteSettings = {
   navItems?: { _key: string; label: string; path: string; hasDropdown?: boolean }[]
+  contactPhone?: string
 }
 
 type PracticeAreaRef = {
@@ -102,5 +103,11 @@ export default async function Navbar() {
     practiceAreaLinks = FALLBACK_PRACTICE_AREAS
   }
 
-  return <NavbarClient navLinks={navLinks} practiceAreaLinks={practiceAreaLinks} />
+  return (
+    <NavbarClient
+      navLinks={navLinks}
+      practiceAreaLinks={practiceAreaLinks}
+      contactPhone={settings?.contactPhone ?? '+1-(954) 390-0100'}
+    />
+  )
 }
