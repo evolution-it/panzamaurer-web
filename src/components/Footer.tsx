@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { client } from '@/sanity/client'
 import { LOCATIONS_QUERY } from '@/sanity/queries/locations'
+import { SITE_SETTINGS_QUERY } from '@/sanity/queries/siteSettings'
 
 type Location = {
   _id: string
@@ -12,16 +13,27 @@ type Location = {
   phone?: string
 }
 
+type SiteSettings = {
+  footerTagline?: string
+}
+
 export default async function Footer() {
-  const locations: Location[] = await client
-    .fetch(LOCATIONS_QUERY, {}, { next: { tags: ['locations'] } })
-    .catch(() => [])
+  const [locations, settings] = await Promise.all([
+    client
+      .fetch<Location[]>(LOCATIONS_QUERY, {}, { next: { tags: ['locations'] } })
+      .catch(() => [] as Location[]),
+    client
+      .fetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { tags: ['siteSettings'] } })
+      .catch(() => null),
+  ])
+
+  const tagline =
+    settings?.footerTagline ?? 'Copyright © Panza, Maurer & Maynard 2026 All Rights Reserved.'
 
   return (
     <footer className='w-full bg-dark-navy'>
       <div className='mx-auto max-w-[1440px] px-8 py-12 lg:px-28 lg:py-16'>
         <div className='flex flex-col gap-20'>
-          {/* Logo */}
           <Link href='/' className='flex-shrink-0'>
             <Image
               src='/images/footer-logo.svg'
@@ -31,7 +43,6 @@ export default async function Footer() {
             />
           </Link>
 
-          {/* Location columns */}
           <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
             {locations.map((loc) => (
               <div key={loc._id} className='flex flex-col gap-4'>
@@ -67,9 +78,8 @@ export default async function Footer() {
             ))}
           </div>
 
-          {/* Copyright */}
           <p className='font-[family-name:var(--font-noto)] text-base font-normal leading-6 text-gray-400'>
-            Copyright &copy; Panza, Maurer &amp; Maynard 2026 All Rights Reserved.
+            {tagline}
           </p>
         </div>
       </div>

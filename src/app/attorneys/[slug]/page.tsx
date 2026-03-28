@@ -2,10 +2,10 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { client, getDraftClient } from '@/sanity/client'
+import { client } from '@/sanity/client'
+import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { ATTORNEY_BY_SLUG_QUERY, ATTORNEY_SLUGS_QUERY } from '@/sanity/queries/attorneys'
-import { draftMode } from 'next/headers'
 
 type AttorneyDetail = {
   _id: string
@@ -25,7 +25,7 @@ type AttorneyDetail = {
 }
 
 export async function generateStaticParams() {
-  const slugs: string[] = await client.fetch(ATTORNEY_SLUGS_QUERY)
+  const slugs: string[] = await client.fetch(ATTORNEY_SLUGS_QUERY).catch(() => [])
   return slugs.map((slug) => ({ slug }))
 }
 
@@ -43,16 +43,12 @@ export default async function AttorneyProfilePage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const { isEnabled } = await draftMode()
-  const sanityClient = isEnabled ? getDraftClient() : client
-  const fetchOptions = isEnabled
-    ? { cache: 'no-store' as const }
-    : { next: { tags: ['attorneys'] } }
+  const { sanityClient, cacheTags } = await getDraftModeClient()
 
   const attorney: AttorneyDetail | null = await sanityClient.fetch(
     ATTORNEY_BY_SLUG_QUERY,
     { slug },
-    fetchOptions,
+    cacheTags(['attorneys']),
   )
 
   if (!attorney) {

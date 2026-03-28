@@ -22,6 +22,12 @@ export const LATEST_NEWS_HOMEPAGE_QUERY = groq`
   }
 `
 
+export const HOME_NEWS_QUERY = groq`
+  *[_type == "newsArticle" && status == "published"] | order(date desc) [0...$count] {
+    ${NEWS_CARD_FIELDS}
+  }
+`
+
 export const ARCHIVE_NEWS_QUERY = groq`
   *[_type == "newsArticle" && status in ["published", "archived"]] | order(date desc) [6...] {
     ${NEWS_CARD_FIELDS}

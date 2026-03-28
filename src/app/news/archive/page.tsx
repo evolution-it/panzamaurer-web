@@ -3,9 +3,8 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import PageHero from '@/components/PageHero'
 import Footer from '@/components/Footer'
-import { client, getDraftClient } from '@/sanity/client'
+import { getDraftModeClient } from '@/sanity/draftMode'
 import { ARCHIVE_NEWS_QUERY } from '@/sanity/queries/news'
-import { draftMode } from 'next/headers'
 
 export const metadata = {
   title: 'News Archive | Panza Maurer',
@@ -29,13 +28,9 @@ export default async function NewsArchivePage({
   searchParams: Promise<{ page?: string }>
 }) {
   const { page } = await searchParams
-  const { isEnabled } = await draftMode()
-  const sanityClient = isEnabled ? getDraftClient() : client
-  const fetchOptions = isEnabled
-    ? { cache: 'no-store' as const }
-    : { next: { tags: ['news'] } }
+  const { sanityClient, cacheTags } = await getDraftModeClient()
 
-  const allArchivePosts: NewsCard[] = await sanityClient.fetch(ARCHIVE_NEWS_QUERY, {}, fetchOptions)
+  const allArchivePosts: NewsCard[] = await sanityClient.fetch(ARCHIVE_NEWS_QUERY, {}, cacheTags(['news']))
 
   const currentPage = Math.max(1, parseInt(page ?? '1', 10) || 1)
   const totalPages = Math.ceil(allArchivePosts.length / PAGE_SIZE)
@@ -50,15 +45,7 @@ export default async function NewsArchivePage({
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
       <main className='w-full pt-[109px]'>
-        <PageHero
-          title='News Archive'
-          subtitle='More Firm News & Events'
-          breadcrumbs={[
-            { label: 'Home', href: '/' },
-            { label: 'News', href: '/news' },
-            { label: 'Archive' },
-          ]}
-        />
+        <PageHero title='News Archive' subtitle='More Firm News & Events' />
 
         <section className='bg-white'>
           <div className='mx-auto max-w-[1440px] px-8 py-12 lg:px-28'>

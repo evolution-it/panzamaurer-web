@@ -3,9 +3,9 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ReactMarkdown from 'react-markdown'
-import { client, getDraftClient } from '@/sanity/client'
+import { client } from '@/sanity/client'
+import { getDraftModeClient } from '@/sanity/draftMode'
 import { NEWS_ARTICLE_BY_SLUG_QUERY, NEWS_SLUGS_QUERY } from '@/sanity/queries/news'
-import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 type NewsArticle = {
@@ -23,7 +23,7 @@ type NewsArticle = {
 }
 
 export async function generateStaticParams() {
-  const slugs: string[] = await client.fetch(NEWS_SLUGS_QUERY)
+  const slugs: string[] = await client.fetch(NEWS_SLUGS_QUERY).catch(() => [])
   return slugs.map((slug) => ({ slug }))
 }
 
@@ -41,16 +41,12 @@ export default async function NewsArticlePage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const { isEnabled } = await draftMode()
-  const sanityClient = isEnabled ? getDraftClient() : client
-  const fetchOptions = isEnabled
-    ? { cache: 'no-store' as const }
-    : { next: { tags: ['news'] } }
+  const { sanityClient, cacheTags } = await getDraftModeClient()
 
   const post: NewsArticle | null = await sanityClient.fetch(
     NEWS_ARTICLE_BY_SLUG_QUERY,
     { slug },
-    fetchOptions,
+    cacheTags(['news']),
   )
 
   if (!post) {

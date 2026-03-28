@@ -8,6 +8,7 @@
  */
 
 import { createClient } from '@sanity/client'
+import fs from 'fs'
 import path from 'path'
 import dotenv from 'dotenv'
 
@@ -36,7 +37,51 @@ function ref(id: string, key: string) {
   return { _type: 'reference' as const, _ref: id, _key: key, _weak: true }
 }
 
+async function uploadVideoAssets() {
+  const videoFiles = [
+    { filename: 'sea-view.mp4', localPath: 'public/assets/sea-view.mp4' },
+    { filename: 'cityview.mp4', localPath: 'public/assets/cityview.mp4' },
+    { filename: 'townhouse.mp4', localPath: 'public/assets/townhouse.mp4' },
+  ]
+
+  console.log('🎬 Uploading hero video assets...')
+  const videoRefs: { _type: string; _key: string; asset: { _type: string; _ref: string } }[] = []
+
+  for (const video of videoFiles) {
+    const existing = await client.fetch<{ _id: string } | null>(
+      `*[_type == "sanity.fileAsset" && originalFilename == $filename][0]{ _id }`,
+      { filename: video.filename },
+    )
+
+    if (existing?._id) {
+      console.log(`  ⏭️  Already uploaded: ${video.filename}`)
+      videoRefs.push({
+        _type: 'file',
+        _key: `video-${video.filename.replace(/\./g, '-')}`,
+        asset: { _type: 'reference', _ref: existing._id },
+      })
+    } else {
+      const filePath = path.resolve(process.cwd(), video.localPath)
+      const fileStream = fs.createReadStream(filePath)
+      const asset = await client.assets.upload('file', fileStream, {
+        filename: video.filename,
+        contentType: 'video/mp4',
+      })
+      console.log(`  ✅ Uploaded: ${video.filename}`)
+      videoRefs.push({
+        _type: 'file',
+        _key: `video-${video.filename.replace(/\./g, '-')}`,
+        asset: { _type: 'reference', _ref: asset._id },
+      })
+    }
+  }
+
+  return videoRefs
+}
+
 async function seedPages() {
+  const heroVideos = await uploadVideoAssets()
+
   console.log('📄 Seeding page documents...')
 
   const pages = [
@@ -51,6 +96,50 @@ async function seedPages() {
       showInNavigation: true,
       navigationOrder: 1,
       sections: [
+        {
+          _type: 'heroSection',
+          _key: 'section-hero',
+          heading: 'We Know Florida',
+          subtitle:
+            'Representing businesses, regulated industries and institutions for more than 50 years.',
+          videos: heroVideos,
+        },
+        {
+          _type: 'aboutSection',
+          _key: 'section-about',
+          heading: 'About Our Firm',
+          quote:
+            '\u201cPanza Maurer\u2019s mission is to provide our clients with a team of highly skilled and motivated professionals dedicated to helping clients resolve their legal and business needs with reliability, honesty and excellence.\u201d',
+          body: [
+            "At Panza Maurer, we\u2019re more than just legal advisors \u2014 we\u2019re strategic partners who know how to get things done in Florida\u2019s complex regulatory and administrative landscape. Panza Maurer counsels a wide range of public and private clients in resolving their legal issues.",
+            'Whether engaging in rulemaking, procurements, facing compliance issues, or influencing policy, we bring deep insight, creative strategies, and real-world experience to the table.',
+            'With offices in Fort Lauderdale, Miami, and Tallahassee, our team is here to help you move forward \u2014 clearly, confidently, and with purpose.',
+          ].join('\n'),
+        },
+        {
+          _type: 'practiceAreasSection',
+          _key: 'section-practices',
+          heading: 'Practice Areas',
+          practiceAreas: [
+            ref('practicearea-administrative--regulatory-law', 'pa-1'),
+            ref('practicearea-healthcare', 'pa-2'),
+            ref('practicearea-government-relations', 'pa-3'),
+            ref('practicearea-labor--employment', 'pa-4'),
+            ref('practicearea-litigation', 'pa-5'),
+            ref('practicearea-education-law', 'pa-6'),
+            ref('practicearea-compliance', 'pa-7'),
+            ref('practicearea-corporate--transactional', 'pa-8'),
+            ref('practicearea-land-use--environmental', 'pa-9'),
+            ref('practicearea-trusts--estates', 'pa-10'),
+            ref('practicearea-technology--it', 'pa-11'),
+            ref('practicearea-gaming--hospitality', 'pa-12'),
+            ref('practicearea-strategic-planning', 'pa-13'),
+            ref('practicearea-procurement', 'pa-14'),
+            ref('practicearea-real-property', 'pa-15'),
+            ref('practicearea-receivership--conservatorship', 'pa-16'),
+            ref('practicearea-medical-marijuana', 'pa-17'),
+          ],
+        },
         {
           _type: 'teamSection',
           _key: 'section-team',
@@ -78,6 +167,15 @@ async function seedPages() {
             ref('location-fort-lauderdale', 'loc-2'),
             ref('location-coral-gables', 'loc-3'),
           ],
+        },
+        {
+          _type: 'ctaSection',
+          _key: 'section-cta',
+          heading: 'Get in Touch',
+          subtitle: 'Panza Maurer is ready to navigate a successful result.',
+          body: 'Our experienced strategic approach provides the foundation for every case we engage in. Please do not hesitate to contact us.',
+          ctaLabel: 'Meet Our Team',
+          ctaHref: '/attorneys',
         },
       ],
     },
@@ -265,7 +363,16 @@ async function seedPages() {
         'Learn about Panza Maurer, a Florida law firm with more than 50 years of legal excellence.',
       showInNavigation: false,
       navigationOrder: 9,
-      sections: [],
+      sections: [
+        {
+          _type: 'heroSection',
+          _key: 'section-hero',
+          heading: 'About the Firm',
+          boldPrefix: 'For more than five decades,',
+          subtitle:
+            'Panza Maurer has been committed to providing the highest caliber of legal services with integrity, reliability and dedication.',
+        },
+      ],
     },
   ]
 

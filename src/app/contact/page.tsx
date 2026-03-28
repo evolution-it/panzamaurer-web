@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import PageHero from '@/components/PageHero'
+import LocationAddress from '@/components/LocationAddress'
 import Footer from '@/components/Footer'
-import { client, getDraftClient } from '@/sanity/client'
+import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { LOCATIONS_QUERY } from '@/sanity/queries/locations'
 import { PAGE_BY_SLUG_QUERY } from '@/sanity/queries/pages'
-import { draftMode } from 'next/headers'
 
 export const metadata = {
   title: 'Contact Us | Panza Maurer',
@@ -24,30 +24,26 @@ type Location = {
   order: number
 }
 
-type PageSection = {
-  _type: string
-  locations?: Location[]
-}
-
+type PageSection = { _type: string; locations?: Location[] }
 type PageConfig = { sections?: PageSection[] }
 
 export default async function ContactPage() {
-  const { isEnabled } = await draftMode()
-  const sanityClient = isEnabled ? getDraftClient() : client
-  const fetchOptions = isEnabled
-    ? { cache: 'no-store' as const }
-    : { next: { tags: ['locations', 'pages'] } }
+  const { sanityClient, cacheTags } = await getDraftModeClient()
 
-  // Use page config ordering/selection if available, otherwise all locations
-  const pageConfig: PageConfig | null = await sanityClient
-    .fetch(PAGE_BY_SLUG_QUERY, { slug: 'contact' }, fetchOptions)
-    .catch(() => null)
+  const [pageConfig, fallbackLocations] = await Promise.all([
+    sanityClient
+      .fetch<PageConfig>(PAGE_BY_SLUG_QUERY, { slug: 'contact' }, cacheTags(['locations', 'pages']))
+      .catch(() => null),
+    sanityClient
+      .fetch<Location[]>(LOCATIONS_QUERY, {}, cacheTags(['locations']))
+      .catch(() => [] as Location[]),
+  ])
 
   const locationsSection = pageConfig?.sections?.find((s) => s._type === 'locationsSection')
   const offices: Location[] =
     locationsSection?.locations && locationsSection.locations.length > 0
       ? locationsSection.locations
-      : await sanityClient.fetch(LOCATIONS_QUERY, {}, fetchOptions).catch(() => [])
+      : fallbackLocations
 
   return (
     <div className='flex min-h-screen flex-col items-center'>
@@ -56,10 +52,6 @@ export default async function ContactPage() {
         <PageHero
           title='Contact Us'
           subtitle='Every Second Counts! When you need serious counsel every second counts. Panza Maurer is ready to navigate a successful result. Our experienced strategic approach provides the foundation for every case we engage in. Please do not hesitate to contact us.'
-          breadcrumbs={[
-            { label: 'Home', href: '/' },
-            { label: 'Contact' },
-          ]}
         />
 
         <section className='bg-white'>
@@ -72,7 +64,6 @@ export default async function ContactPage() {
 
                 return (
                   <div key={office._id} className='flex flex-col gap-8'>
-                    {/* Image */}
                     <div className='relative h-[220px] overflow-hidden rounded-[10px]'>
                       {imgSrc ? (
                         <Image
@@ -86,41 +77,20 @@ export default async function ContactPage() {
                       )}
                     </div>
 
-                    {/* Info */}
                     <div className='flex flex-col gap-3'>
                       <h2 className='font-[family-name:var(--font-hanken)] text-3xl font-semibold text-slate-600 lg:text-[42px] lg:leading-[50px]'>
                         {office.name}
                       </h2>
                       <div className='h-[2px] w-[168px] bg-primary-red' />
 
-                      <div className='mt-2 flex items-start gap-3'>
-                        <Image
-                          src='/images/location-pin.svg'
-                          alt=''
-                          width={18}
-                          height={18}
-                          className='mt-1'
+                      <div className='mt-2'>
+                        <LocationAddress
+                          building={office.building}
+                          address={office.address}
+                          city={office.city}
+                          phone={office.phone}
+                          fax={office.fax}
                         />
-                        <div>
-                          {office.building && (
-                            <p className='font-semibold text-gray-950'>{office.building}</p>
-                          )}
-                          {office.address?.map((line, i) => (
-                            <p key={i} className='font-semibold text-gray-950'>{line}</p>
-                          ))}
-                          {office.city && (
-                            <p className='font-semibold text-gray-950'>{office.city}</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className='pl-[30px]'>
-                        {office.phone && (
-                          <p className='text-gray-950'>{office.phone} (T)</p>
-                        )}
-                        {office.fax && (
-                          <p className='text-gray-950'>{office.fax} (F)</p>
-                        )}
                       </div>
 
                       {office.phone && (

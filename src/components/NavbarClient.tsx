@@ -18,9 +18,10 @@ export type PracticeAreaLink = {
 type Props = {
   navLinks: NavLink[];
   practiceAreaLinks: PracticeAreaLink[];
+  contactPhone: string;
 };
 
-export default function NavbarClient({ navLinks, practiceAreaLinks }: Props) {
+export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [practiceAreasOpen, setPracticeAreasOpen] = useState(false);
 
@@ -29,13 +30,13 @@ export default function NavbarClient({ navLinks, practiceAreaLinks }: Props) {
       {/* Mobile Phone Bar */}
       <div className="flex items-center justify-center bg-primary-dark px-4 py-3 lg:hidden">
         <a
-          href="tel:+19543900100"
+          href={`tel:${contactPhone.replace(/[^\d+]/g, '')}`}
           className="flex items-center gap-3 font-[family-name:var(--font-inter)] text-base font-medium tracking-[2px] text-white"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
-          +1-(954) 390-0100
+          {contactPhone}
         </a>
       </div>
 

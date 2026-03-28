@@ -3,10 +3,9 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import PageHero from '@/components/PageHero'
 import Footer from '@/components/Footer'
-import { client, getDraftClient } from '@/sanity/client'
+import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { LATEST_NEWS_QUERY } from '@/sanity/queries/news'
-import { draftMode } from 'next/headers'
 
 export const metadata = {
   title: 'News | Panza Maurer',
@@ -23,26 +22,15 @@ type NewsCard = {
 }
 
 export default async function NewsPage() {
-  const { isEnabled } = await draftMode()
-  const sanityClient = isEnabled ? getDraftClient() : client
-  const fetchOptions = isEnabled
-    ? { cache: 'no-store' as const }
-    : { next: { tags: ['news'] } }
+  const { sanityClient, cacheTags } = await getDraftModeClient()
 
-  const posts: NewsCard[] = await sanityClient.fetch(LATEST_NEWS_QUERY, {}, fetchOptions)
+  const posts: NewsCard[] = await sanityClient.fetch(LATEST_NEWS_QUERY, {}, cacheTags(['news']))
 
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
       <main className='w-full pt-[109px]'>
-        <PageHero
-          title='News'
-          subtitle='Recent Firm News & Events'
-          breadcrumbs={[
-            { label: 'Home', href: '/' },
-            { label: 'News' },
-          ]}
-        />
+        <PageHero title='News' subtitle='Recent Firm News & Events' />
 
         <section className='bg-white'>
           <div className='mx-auto max-w-[1440px] px-8 py-12 lg:px-28'>
