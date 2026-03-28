@@ -1,7 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-const FALLBACK_AREAS = [
+type PracticeAreaItem = {
+  _id?: string
+  title: string
+  slug: { current: string }
+}
+
+const FALLBACK_AREAS: PracticeAreaItem[] = [
   { title: 'Administrative | Regulatory Law', slug: { current: 'administrative--regulatory-law' } },
   { title: 'Healthcare', slug: { current: 'healthcare' } },
   { title: 'Compliance', slug: { current: 'compliance' } },
@@ -19,12 +25,6 @@ const FALLBACK_AREAS = [
   { title: 'Receivership | Conservatorship', slug: { current: 'receivership--conservatorship' } },
   { title: 'Medical Marijuana', slug: { current: 'medical-marijuana' } },
 ];
-
-type PracticeAreaItem = {
-  _id?: string
-  title: string
-  slug: { current: string }
-}
 
 export default function PracticeAreas({ areas }: { areas?: PracticeAreaItem[] }) {
   const displayAreas = areas && areas.length > 0 ? areas : FALLBACK_AREAS;
