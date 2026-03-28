@@ -26,9 +26,9 @@ export const practiceArea = defineType({
     }),
     defineField({
       name: 'content',
-      title: 'Content Paragraphs',
+      title: 'Content',
       type: 'array',
-      of: [defineArrayMember({ type: 'text' })],
+      of: [{ type: 'block' }],
     }),
     defineField({
       name: 'featuredAttorneys',

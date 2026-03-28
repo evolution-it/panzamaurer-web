@@ -1,3 +1,4 @@
+import { type PortableTextBlock } from '@portabletext/react'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import About from '@/components/About'
@@ -39,7 +40,7 @@ type PageSection = {
   heading?: string
   boldPrefix?: string
   subtitle?: string
-  body?: string
+  body?: PortableTextBlock[]
   quote?: string
   image?: SanityImage | null
   ctaLabel?: string
@@ -129,13 +130,6 @@ export default async function Home() {
         <Team teamMembers={teamMembers} />
         <News count={newsCount} />
         <Locations preloadedLocations={preloadedLocations} />
-        <GetInTouch
-          heading={ctaSection?.heading ?? undefined}
-          subtitle={ctaSection?.subtitle ?? undefined}
-          body={ctaSection?.body ?? undefined}
-          ctaLabel={ctaSection?.ctaLabel ?? undefined}
-          ctaHref={ctaSection?.ctaHref ?? undefined}
-        />
       </main>
       <Footer />
     </div>

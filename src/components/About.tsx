@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { PortableText, type PortableTextBlock } from '@portabletext/react';
 
 const FALLBACK_QUOTE =
   '\u201cPanza Maurer\u2019s mission is to provide our clients with a team of highly skilled and motivated professionals dedicated to helping clients resolve their legal and business needs with reliability, honesty and excellence.\u201d';
@@ -17,12 +18,11 @@ export default function About({
 }: {
   heading?: string
   quote?: string
-  body?: string
+  body?: PortableTextBlock[]
   imageUrl?: string
 }) {
   const displayHeading = heading ?? 'About Our Firm';
   const displayQuote = quote ?? FALLBACK_QUOTE;
-  const displayParagraphs = body ? body.split('\n').filter(Boolean) : FALLBACK_BODY;
   const displayImageUrl = imageUrl ?? '/images/about-image.jpg';
 
   return (
@@ -58,14 +58,20 @@ export default function About({
                 {displayQuote}
               </p>
 
-              {displayParagraphs.map((paragraph, i) => (
-                <p
-                  key={i}
-                  className='font-[family-name:var(--font-noto)] text-base font-normal leading-6 text-gray-300'
-                >
-                  {paragraph}
-                </p>
-              ))}
+              {body && body.length > 0 ? (
+                <div className='font-[family-name:var(--font-noto)] text-base font-normal leading-6 text-gray-300 [&_p]:mb-2 [&_strong]:font-semibold [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal'>
+                  <PortableText value={body} />
+                </div>
+              ) : (
+                FALLBACK_BODY.map((paragraph, i) => (
+                  <p
+                    key={i}
+                    className='font-[family-name:var(--font-noto)] text-base font-normal leading-6 text-gray-300'
+                  >
+                    {paragraph}
+                  </p>
+                ))
+              )}
             </div>
           </div>
         </div>

@@ -14,14 +14,19 @@
     "node": ">=24"
   },
   "dependencies": {
+    "@portabletext/react": "^6.0.3",
     "@sanity/image-url": "^2.1.0",
     "@sanity/visual-editing": "^5.3.3",
+    "@types/turndown": "^5.0.6",
+    "cheerio": "^1.2.0",
     "next": "16.2.1",
     "next-sanity": "^12.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-markdown": "^10.1.0",
-    "sanity": "^5.18.0"
+    "sanity": "^5.18.0",
+    "sanity-plugin-markdown": "^8.0.5",
+    "turndown": "^7.2.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

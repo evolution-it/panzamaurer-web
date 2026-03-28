@@ -92,7 +92,7 @@ export const page = defineType({
             defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'About Our Firm' }),
             defineField({ name: 'image', title: 'Image', type: 'image', options: { hotspot: true } }),
             defineField({ name: 'quote', title: 'Mission Statement / Quote', type: 'text', rows: 3 }),
-            defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 6 }),
+            defineField({ name: 'body', title: 'Body Text', type: 'array', of: [{ type: 'block' }] }),
           ],
           preview: {
             select: { heading: 'heading' },
@@ -129,12 +129,12 @@ export const page = defineType({
           title: 'Text Block',
           fields: [
             defineField({ name: 'heading', title: 'Heading', type: 'string' }),
-            defineField({ name: 'body', title: 'Body', type: 'text', rows: 5 }),
+            defineField({ name: 'body', title: 'Body', type: 'array', of: [{ type: 'block' }] }),
           ],
           preview: {
-            select: { heading: 'heading', body: 'body' },
-            prepare({ heading, body }) {
-              return { title: heading || 'Text Block', subtitle: body }
+            select: { heading: 'heading' },
+            prepare({ heading }) {
+              return { title: heading || 'Text Block' }
             },
           },
         }),
