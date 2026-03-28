@@ -1,6 +1,7 @@
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { presentationTool } from 'sanity/presentation'
+import { markdownSchema } from 'sanity-plugin-markdown'
 import { schemaTypes } from './schemas'
 import { projectId, dataset, apiVersion } from './env'
 import { resolve } from './presentation/resolve'
@@ -15,6 +16,7 @@ export default defineConfig({
   apiVersion,
 
   plugins: [
+    markdownSchema(),
     structureTool({
       structure: (S) =>
         S.list()

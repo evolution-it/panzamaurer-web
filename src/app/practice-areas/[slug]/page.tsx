@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { PortableText, type PortableTextBlock } from '@portabletext/react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { client } from '@/sanity/client'
@@ -17,7 +18,7 @@ type PracticeAreaDetail = {
   title: string
   slug: { current: string }
   heading: string
-  content: string[]
+  content: PortableTextBlock[]
   status: string
   featuredAttorneys?: {
     _id: string
@@ -146,12 +147,10 @@ export default async function PracticeAreaDetailPage({
               <h2 className='mb-8 font-[family-name:var(--font-hanken)] text-2xl font-semibold text-gray-900 lg:text-[30px]'>
                 {area.heading}
               </h2>
-              <div className='font-[family-name:var(--font-noto)] text-base leading-7 text-gray-700'>
-                {area.content?.map((paragraph, i) => (
-                  <p key={i} className='mb-6 text-justify'>
-                    {paragraph}
-                  </p>
-                ))}
+              <div className='font-[family-name:var(--font-noto)] text-base leading-7 text-gray-700 [&_p]:mb-6 [&_p]:text-justify [&_ul]:mb-4 [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:mb-4 [&_ol]:ml-5 [&_ol]:list-decimal [&_strong]:font-semibold [&_a]:text-primary-red [&_a]:underline'>
+                {area.content?.length > 0 && (
+                  <PortableText value={area.content} />
+                )}
               </div>
             </div>
 
