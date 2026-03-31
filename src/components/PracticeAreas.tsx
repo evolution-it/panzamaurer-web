@@ -1,22 +1,23 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const practiceAreas = [
-  "Administrative | Regulatory Law",
-  "Healthcare",
-  "Compliance",
-  "Corporate | Transactional",
-  "Litigation",
-  "Land Use | Environmental",
-  "Estate Planning | Probate",
-  "Technology | IT",
-  "Education Law",
-  "Gaming | Hospitality",
-  "Strategic Planning",
-  "Labor | Employment",
-  "Procurement",
-  "Real Property",
-  "Receivership | Conservatorship",
-  "Medical Marijuana",
+  { label: "Administrative | Regulatory Law", slug: "administrative--regulatory-law" },
+  { label: "Healthcare", slug: "healthcare" },
+  { label: "Compliance", slug: "compliance" },
+  { label: "Corporate | Transactional", slug: "corporate--transactional" },
+  { label: "Litigation", slug: "litigation" },
+  { label: "Land Use | Environmental", slug: "land-use--environmental" },
+  { label: "Estate Planning | Probate", slug: "trusts--estates" },
+  { label: "Technology | IT", slug: "technology--it" },
+  { label: "Education Law", slug: "education-law" },
+  { label: "Gaming | Hospitality", slug: "gaming--hospitality" },
+  { label: "Strategic Planning", slug: "strategic-planning" },
+  { label: "Labor | Employment", slug: "labor--employment" },
+  { label: "Procurement", slug: "procurement" },
+  { label: "Real Property", slug: "real-property" },
+  { label: "Receivership | Conservatorship", slug: "receivership--conservatorship" },
+  { label: "Medical Marijuana", slug: "medical-marijuana" },
 ];
 
 export default function PracticeAreas() {
@@ -63,8 +64,9 @@ export default function PracticeAreas() {
 
           <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {practiceAreas.map((area) => (
-              <div
-                key={area}
+              <Link
+                key={area.slug}
+                href={`/practice-areas/${area.slug}`}
                 className="flex items-center gap-5 rounded-lg py-5 transition-colors hover:bg-white/5"
               >
                 <Image
@@ -74,9 +76,9 @@ export default function PracticeAreas() {
                   height={34}
                 />
                 <span className="font-[family-name:var(--font-noto)] text-base font-medium leading-[34px] tracking-tight text-gray-50">
-                  {area}
+                  {area.label}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
