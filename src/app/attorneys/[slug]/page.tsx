@@ -1013,14 +1013,23 @@ const attorneyData: Record<
     name: 'Sandra Harris',
     firstName: 'Sandra',
     role: 'Executive Vice President of Government Affairs',
-    image: 'sandra-harris.png',
+    image: 'sandra-harris.jpeg',
     education: [],
     barAdmissions: [],
     courtAdmissions: [],
     professionalMemberships: [],
     intro:
-      'Sandra Harris is a government relations professional at Panza Maurer, bringing extensive experience in legislative advocacy and public affairs.',
-    sections: [],
+      'Sandra S. Harris is the governmental relations director for the firm, overseeing the lobbying and political activities for and on behalf of the firm’s clients. Lobbying activities at the state level include working with both legislative and executive agencies, local governments, and congressional delegations.',
+    sections: [
+      {
+        title: '',
+        content: [
+          'Ms. Harris earned a Bachelor of Science degree in Political Science from Florida State University and has worked within the public and private sectors of government since 1979. She has served in senior policy positions at the Florida Department of Health and Rehabilitative Services, and the Florida Department of Education.',
+          'She has a strong background in health care policy, social service policy, and education policy areas. In addition, Ms. Harris has worked with several trade associations and business groups.',
+          'Ms. Harris is not a member of the Florida Bar.',
+        ],
+      }
+    ],
   },
 };
 
@@ -1124,12 +1133,14 @@ export default async function AttorneyProfilePage({
             <div className='w-full flex-shrink-0 lg:sticky lg:top-[130px] lg:w-[340px] lg:self-start'>
               <div className='flex flex-col gap-6'>
                 {/* Credentials Header */}
+                {(attorney.education.length > 0 || attorney.barAdmissions.length > 0 || attorney.courtAdmissions.length > 0 || attorney.professionalMemberships.length > 0) && (
                 <div>
                   <h3 className='font-[family-name:var(--font-noto)] text-lg font-bold text-gray-900'>
                     Credentials
                   </h3>
                   <div className='mt-2 h-[3px] w-10 bg-primary-red' />
                 </div>
+                )}
 
                 {/* Education */}
                 {attorney.education.length > 0 && (
