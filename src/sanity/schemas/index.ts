@@ -1,5 +1,6 @@
 import { attorney } from './attorney'
 import { contentSnapshot } from './contentSnapshot'
+import { globalSnapshot } from './globalSnapshot'
 import { location } from './location'
 import { newsArticle } from './newsArticle'
 import { page } from './page'
@@ -9,6 +10,7 @@ import { siteSettings } from './siteSettings'
 export const schemaTypes = [
   attorney,
   contentSnapshot,
+  globalSnapshot,
   location,
   newsArticle,
   page,

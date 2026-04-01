@@ -32,6 +32,7 @@ interface Snapshot {
   createdBy: string
   schemaVersion: string
   snapshotData: string
+  globalSnapshot?: { _ref: string }
 }
 
 /** Props shape passed by Sanity's S.view.component() */
@@ -66,7 +67,8 @@ export function SnapshotHistory({ documentId, schemaType }: SnapshotHistoryProps
     try {
       const result = await client.fetch<Snapshot[]>(
         `*[_type == "contentSnapshot" && sourceId == $id] | order(createdAt desc) {
-          _id, label, createdAt, createdBy, schemaVersion, snapshotData
+          _id, label, createdAt, createdBy, schemaVersion, snapshotData,
+          globalSnapshot { _ref }
         }`,
         { id: documentId },
       )
@@ -137,11 +139,11 @@ export function SnapshotHistory({ documentId, schemaType }: SnapshotHistoryProps
             <Text size={2} weight="semibold">
               Version History
             </Text>
-            <Text size={1} muted>
-              {snapshots.length === 0
-                ? 'No snapshots yet. Use "Save Snapshot" from the action menu (... button).'
-                : `${snapshots.length} snapshot${snapshots.length === 1 ? '' : 's'}`}
-            </Text>
+          <Text size={1} muted>
+            {snapshots.length === 0
+              ? 'No snapshots yet. Snapshots are created automatically each time this document is published.'
+              : `${snapshots.length} snapshot${snapshots.length === 1 ? '' : 's'} — created automatically on publish`}
+          </Text>
           </Stack>
           <Button text="Refresh" mode="ghost" fontSize={1} padding={2} onClick={fetchSnapshots} />
         </Flex>
@@ -194,6 +196,11 @@ export function SnapshotHistory({ documentId, schemaType }: SnapshotHistoryProps
                         ? ' (current)'
                         : ''}
                     </Text>
+                  )}
+                  {snapshot.globalSnapshot?._ref && (
+                    <Badge tone="primary" fontSize={0} padding={2}>
+                      Full-site snapshot linked
+                    </Badge>
                   )}
                 </Stack>
                 <Button

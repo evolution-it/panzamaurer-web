@@ -6,10 +6,10 @@ import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list'
 import { schemaTypes } from './schemas'
 import { projectId, dataset, apiVersion } from './env'
 import { resolve } from './presentation/resolve'
-import { SaveSnapshotAction } from './actions/saveSnapshot'
+import { createAutoPublishSnapshotAction } from './actions/autoPublishSnapshotAction'
 import { SnapshotHistory } from './views/SnapshotHistory'
 
-const SNAPSHOT_TYPES = ['page', 'newsArticle']
+const SNAPSHOT_EXCLUDED_TYPES = ['contentSnapshot', 'globalSnapshot']
 
 export default defineConfig({
   name: 'panza-maurer',
@@ -79,14 +79,26 @@ export default defineConfig({
               .child(
                 S.documentList()
                   .title('Unpublished Changes')
-                  .filter('_id in path("drafts.**") && _type != "contentSnapshot"')
+                  .filter('_id in path("drafts.**") && _type != "contentSnapshot" && _type != "globalSnapshot"')
                   .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }]),
               ),
             S.divider(),
             S.listItem()
+              .title('Global Snapshots')
+              .schemaType('globalSnapshot')
+              .child(
+                S.documentTypeList('globalSnapshot')
+                  .title('Global Snapshots')
+                  .defaultOrdering([{ field: 'createdAt', direction: 'desc' }]),
+              ),
+            S.listItem()
               .title('Content Snapshots')
               .schemaType('contentSnapshot')
-              .child(S.documentTypeList('contentSnapshot').title('Content Snapshots')),
+              .child(
+                S.documentTypeList('contentSnapshot')
+                  .title('Content Snapshots')
+                  .defaultOrdering([{ field: 'createdAt', direction: 'desc' }]),
+              ),
           ]),
     }),
     presentationTool({
@@ -107,9 +119,13 @@ export default defineConfig({
     actions: (
       prev: DocumentActionComponent[],
       context: { schemaType: string },
-    ): DocumentActionComponent[] =>
-      SNAPSHOT_TYPES.includes(context.schemaType)
-        ? [...prev, SaveSnapshotAction as DocumentActionComponent]
-        : prev,
+    ): DocumentActionComponent[] => {
+      if (SNAPSHOT_EXCLUDED_TYPES.includes(context.schemaType)) return prev
+      return prev.map((action) =>
+        (action as DocumentActionComponent & { action?: string }).action === 'publish'
+          ? createAutoPublishSnapshotAction(action)
+          : action,
+      )
+    },
   },
 })

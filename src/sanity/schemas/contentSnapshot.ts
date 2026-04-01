@@ -61,6 +61,15 @@ export const contentSnapshot = defineType({
       type: 'string',
       readOnly: true,
     }),
+    defineField({
+      name: 'globalSnapshot',
+      title: 'Global Snapshot',
+      description: 'The full-site snapshot taken at the same time as this item snapshot.',
+      type: 'reference',
+      weak: true,
+      to: [{ type: 'globalSnapshot' }],
+      readOnly: true,
+    }),
   ],
   preview: {
     select: {
