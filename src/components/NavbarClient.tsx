@@ -127,7 +127,7 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="border-t border-gray-200 px-8 pb-6 lg:hidden">
+          <div className="max-h-[calc(100svh-145px)] overflow-y-auto border-t border-gray-200 px-8 pb-6 lg:hidden">
             {navLinks.map((item) =>
               item.hasDropdown ? (
                 <div key={item.label}>

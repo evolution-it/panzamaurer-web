@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 
 export const practiceArea = defineType({
   name: 'practiceArea',
@@ -43,6 +44,21 @@ export const practiceArea = defineType({
         }),
       ],
     }),
+    orderRankField({ type: 'practiceArea' }),
+    defineField({
+      name: 'showOnPracticeAreasPage',
+      title: 'Show on Practice Areas Page',
+      description: 'When enabled, this practice area appears on the /practice-areas listing page.',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
+      name: 'showInNavDropdown',
+      title: 'Show in Navigation Dropdown',
+      description: 'When enabled, this practice area appears in the Practice Areas dropdown in the navigation.',
+      type: 'boolean',
+      initialValue: true,
+    }),
     defineField({
       name: 'status',
       title: 'Status',
@@ -61,6 +77,7 @@ export const practiceArea = defineType({
     select: { title: 'title', subtitle: 'status' },
   },
   orderings: [
+    orderRankOrdering,
     {
       title: 'Title A–Z',
       name: 'titleAsc',

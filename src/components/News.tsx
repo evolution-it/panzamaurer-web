@@ -29,7 +29,7 @@ function NewsCard({ title, date, excerpt, slug }: NewsItem) {
           {formattedDate}
         </p>
         <p className='font-[family-name:var(--font-noto)] text-base font-normal leading-6 text-gray-300'>
-          {excerpt}
+          {excerpt}...
         </p>
         <Link
           href={`/news/${slug.current}`}

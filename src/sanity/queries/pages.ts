@@ -37,7 +37,8 @@ const SECTION_FIELDS = groq`
   "practiceAreas": practiceAreas[]-> {
     _id,
     title,
-    slug
+    slug,
+    showInNavDropdown
   }
 `
 

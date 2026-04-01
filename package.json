@@ -16,6 +16,8 @@
   "dependencies": {
     "@portabletext/react": "^6.0.3",
     "@sanity/image-url": "^2.1.0",
+    "@sanity/orderable-document-list": "^1.5.1",
+    "@sanity/ui": "^3.1.14",
     "@sanity/visual-editing": "^5.3.3",
     "@types/turndown": "^5.0.6",
     "cheerio": "^1.2.0",

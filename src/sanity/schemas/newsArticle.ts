@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
+export const NEWS_ARTICLE_SCHEMA_VERSION = 'newsArticle-v1'
+
 export const newsArticle = defineType({
   name: 'newsArticle',
   title: 'News Article',

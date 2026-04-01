@@ -22,3 +22,13 @@ export function getDraftClient() {
     },
   })
 }
+
+export function getWriteClient() {
+  return createClient({
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: false,
+    token: process.env.SANITY_WRITE_TOKEN,
+  })
+}

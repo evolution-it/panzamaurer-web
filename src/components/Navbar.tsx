@@ -42,6 +42,7 @@ type PracticeAreaRef = {
   _id: string
   title: string
   slug: { current: string }
+  showInNavDropdown?: boolean
 }
 
 type PageSection = {
@@ -88,7 +89,7 @@ export default async function Navbar() {
   let practiceAreaLinks: PracticeAreaLink[]
 
   const resolvedPracticeAreas = (practiceAreasSection?.practiceAreas ?? []).filter(
-    (pa): pa is PracticeAreaRef => pa != null && pa.slug != null,
+    (pa): pa is PracticeAreaRef => pa != null && pa.slug != null && pa.showInNavDropdown !== false,
   )
 
   if (resolvedPracticeAreas.length > 0) {
