@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
+export const PAGE_SCHEMA_VERSION = 'page-v1'
+
 export const page = defineType({
   name: 'page',
   title: 'Page',

@@ -1,10 +1,14 @@
-import { defineConfig } from 'sanity'
+import { defineConfig, type DocumentActionComponent } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { presentationTool } from 'sanity/presentation'
 import { markdownSchema } from 'sanity-plugin-markdown'
 import { schemaTypes } from './schemas'
 import { projectId, dataset, apiVersion } from './env'
 import { resolve } from './presentation/resolve'
+import { SaveSnapshotAction } from './actions/saveSnapshot'
+import { SnapshotHistory } from './views/SnapshotHistory'
+
+const SNAPSHOT_TYPES = ['page', 'newsArticle']
 
 export default defineConfig({
   name: 'panza-maurer',
@@ -26,20 +30,38 @@ export default defineConfig({
               .title('Site Settings')
               .id('siteSettings')
               .child(
-                S.document()
-                  .schemaType('siteSettings')
-                  .documentId('siteSettings'),
+                S.document().schemaType('siteSettings').documentId('siteSettings'),
               ),
             S.divider(),
             S.listItem()
               .title('Pages')
               .schemaType('page')
-              .child(S.documentTypeList('page').title('Pages')),
+              .child(
+                S.documentTypeList('page').child((documentId) =>
+                  S.document()
+                    .documentId(documentId)
+                    .schemaType('page')
+                    .views([
+                      S.view.form(),
+                      S.view.component(SnapshotHistory).title('Version History').id('version-history'),
+                    ]),
+                ),
+              ),
             S.divider(),
             S.listItem()
               .title('News Articles')
               .schemaType('newsArticle')
-              .child(S.documentTypeList('newsArticle').title('News Articles')),
+              .child(
+                S.documentTypeList('newsArticle').child((documentId) =>
+                  S.document()
+                    .documentId(documentId)
+                    .schemaType('newsArticle')
+                    .views([
+                      S.view.form(),
+                      S.view.component(SnapshotHistory).title('Version History').id('version-history'),
+                    ]),
+                ),
+              ),
             S.listItem()
               .title('Attorneys')
               .schemaType('attorney')
@@ -52,6 +74,11 @@ export default defineConfig({
               .title('Locations')
               .schemaType('location')
               .child(S.documentTypeList('location').title('Locations')),
+            S.divider(),
+            S.listItem()
+              .title('Content Snapshots')
+              .schemaType('contentSnapshot')
+              .child(S.documentTypeList('contentSnapshot').title('Content Snapshots')),
           ]),
     }),
     presentationTool({
@@ -66,5 +93,15 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+  },
+
+  document: {
+    actions: (
+      prev: DocumentActionComponent[],
+      context: { schemaType: string },
+    ): DocumentActionComponent[] =>
+      SNAPSHOT_TYPES.includes(context.schemaType)
+        ? [...prev, SaveSnapshotAction as DocumentActionComponent]
+        : prev,
   },
 })
