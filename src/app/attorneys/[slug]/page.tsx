@@ -150,12 +150,14 @@ export default async function AttorneyProfilePage({
             {/* Right: Sidebar */}
             <div className='w-full flex-shrink-0 lg:sticky lg:top-[130px] lg:w-[340px] lg:self-start'>
               <div className='flex flex-col gap-6'>
-                <div>
-                  <h3 className='font-[family-name:var(--font-noto)] text-lg font-bold text-gray-900'>
-                    Credentials
-                  </h3>
-                  <div className='mt-2 h-[3px] w-10 bg-primary-red' />
-                </div>
+                {(attorney.education.length > 0 || attorney.barAdmissions.length > 0 || attorney.courtAdmissions.length > 0 || attorney.professionalMemberships.length > 0) && (
+                  <div>
+                    <h3 className='font-[family-name:var(--font-noto)] text-lg font-bold text-gray-900'>
+                      Credentials
+                    </h3>
+                    <div className='mt-2 h-[3px] w-10 bg-primary-red' />
+                  </div>
+                )}
 
                 {attorney.education?.length > 0 && (
                   <div>
