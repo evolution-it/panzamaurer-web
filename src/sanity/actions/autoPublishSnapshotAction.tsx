@@ -6,7 +6,6 @@ import {
   useCurrentUser,
   type DocumentActionComponent,
   type DocumentActionProps,
-  type DocumentActionDescription,
 } from 'sanity'
 import { apiVersion } from '../env'
 import { PAGE_SCHEMA_VERSION } from '../schemas/page'
@@ -44,7 +43,7 @@ export function createAutoPublishSnapshotAction(
 ): DocumentActionComponent {
   return function AutoPublishSnapshotAction(
     props: DocumentActionProps,
-  ): DocumentActionDescription {
+  ): ReturnType<DocumentActionComponent> {
     const original = OriginalAction(props)
     const client = useClient({ apiVersion })
     const currentUser = useCurrentUser()
@@ -106,7 +105,7 @@ export function createAutoPublishSnapshotAction(
     const wrappedOnHandle = useCallback(() => {
       // Fire snapshot creation without awaiting so publish is never delayed
       createSnapshots()
-      original.onHandle?.()
+      original?.onHandle?.()
     }, [createSnapshots, original])
 
     if (!original) return original
