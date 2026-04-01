@@ -1,7 +1,7 @@
 import { groq } from 'next-sanity'
 
 export const PRACTICE_AREAS_LIST_QUERY = groq`
-  *[_type == "practiceArea" && status == "published"] | order(title asc) {
+  *[_type == "practiceArea" && status == "published" && showOnPracticeAreasPage != false] | order(orderRank asc, title asc) {
     _id,
     title,
     slug,

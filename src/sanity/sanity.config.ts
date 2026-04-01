@@ -2,6 +2,7 @@ import { defineConfig, type DocumentActionComponent } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { presentationTool } from 'sanity/presentation'
 import { markdownSchema } from 'sanity-plugin-markdown'
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list'
 import { schemaTypes } from './schemas'
 import { projectId, dataset, apiVersion } from './env'
 import { resolve } from './presentation/resolve'
@@ -22,7 +23,7 @@ export default defineConfig({
   plugins: [
     markdownSchema(),
     structureTool({
-      structure: (S) =>
+      structure: (S, context) =>
         S.list()
           .title('Content')
           .items([
@@ -66,10 +67,7 @@ export default defineConfig({
               .title('Attorneys')
               .schemaType('attorney')
               .child(S.documentTypeList('attorney').title('Attorneys')),
-            S.listItem()
-              .title('Practice Areas')
-              .schemaType('practiceArea')
-              .child(S.documentTypeList('practiceArea').title('Practice Areas')),
+            orderableDocumentListDeskItem({ type: 'practiceArea', title: 'Practice Areas', S, context }),
             S.listItem()
               .title('Locations')
               .schemaType('location')

@@ -155,7 +155,7 @@ export default async function PracticeAreaDetailPage({
             </div>
 
             {/* Right: Sidebar */}
-            <div className='w-full flex-shrink-0 lg:sticky lg:top-[130px] lg:w-[340px] lg:self-start'>
+            <div className='w-full flex-shrink-0 lg:w-[340px] lg:self-start'>
               <h3 className='mb-6 font-[family-name:var(--font-hanken)] text-xl font-semibold text-gray-900'>
                 Practice Areas
               </h3>
