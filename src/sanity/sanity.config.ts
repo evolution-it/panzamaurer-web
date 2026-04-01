@@ -74,6 +74,16 @@ export default defineConfig({
               .child(S.documentTypeList('location').title('Locations')),
             S.divider(),
             S.listItem()
+              .title('Unpublished Changes')
+              .id('unpublishedChanges')
+              .child(
+                S.documentList()
+                  .title('Unpublished Changes')
+                  .filter('_id in path("drafts.**") && _type != "contentSnapshot"')
+                  .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }]),
+              ),
+            S.divider(),
+            S.listItem()
               .title('Content Snapshots')
               .schemaType('contentSnapshot')
               .child(S.documentTypeList('contentSnapshot').title('Content Snapshots')),
