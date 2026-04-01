@@ -29,7 +29,7 @@ export const HOME_NEWS_QUERY = groq`
 `
 
 export const ARCHIVE_NEWS_QUERY = groq`
-  *[_type == "newsArticle" && status in ["published", "archived"]] | order(date desc) [6...] {
+  *[_type == "newsArticle" && status in ["published", "archived"]] | order(date desc) {
     ${NEWS_CARD_FIELDS}
   }
 `
