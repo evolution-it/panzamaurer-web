@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { PortableText, type PortableTextBlock } from '@portabletext/react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { client } from '@/sanity/client'
@@ -16,12 +17,12 @@ type AttorneyDetail = {
   image?: { asset: { _ref: string } } | null
   type: string
   status: string
-  intro: string
+  intro: PortableTextBlock[]
   education: string[]
   barAdmissions: string[]
   courtAdmissions: string[]
   professionalMemberships: string[]
-  sections: { title: string; content: string[] }[]
+  sections: { title: string; content: PortableTextBlock[] }[]
 }
 
 export async function generateStaticParams() {
@@ -126,8 +127,10 @@ export default async function AttorneyProfilePage({
               </h2>
 
               <div className='font-[family-name:var(--font-noto)] text-base leading-7 text-gray-700'>
-                {attorney.intro && (
-                  <p className='mb-6 text-justify'>{attorney.intro}</p>
+                {attorney.intro?.length > 0 && (
+                  <div className='mb-6 [&_p]:mb-4 [&_p]:text-justify'>
+                    <PortableText value={attorney.intro} />
+                  </div>
                 )}
 
                 {attorney.sections?.map((section) => (
@@ -137,11 +140,11 @@ export default async function AttorneyProfilePage({
                         {section.title}
                       </h3>
                     )}
-                    {section.content?.map((paragraph, i) => (
-                      <p key={i} className='mb-4 text-justify'>
-                        {paragraph}
-                      </p>
-                    ))}
+                    {section.content?.length > 0 && (
+                      <div className='[&_p]:mb-4 [&_p]:text-justify [&_ul]:mb-4 [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:mb-4 [&_ol]:ml-5 [&_ol]:list-decimal'>
+                        <PortableText value={section.content} />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

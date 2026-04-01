@@ -70,7 +70,8 @@ export const attorney = defineType({
     defineField({
       name: 'intro',
       title: 'Introduction',
-      type: 'text',
+      type: 'array',
+      of: [{ type: 'block' }],
     }),
     defineField({
       name: 'education',
@@ -109,9 +110,9 @@ export const attorney = defineType({
             defineField({ name: 'title', title: 'Section Title', type: 'string' }),
             defineField({
               name: 'content',
-              title: 'Paragraphs',
+              title: 'Content',
               type: 'array',
-              of: [defineArrayMember({ type: 'text' })],
+              of: [{ type: 'block' }],
             }),
           ],
           preview: { select: { title: 'title' } },

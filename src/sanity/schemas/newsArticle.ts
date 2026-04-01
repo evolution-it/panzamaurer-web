@@ -38,9 +38,9 @@ export const newsArticle = defineType({
     }),
     defineField({
       name: 'content',
-      title: 'Article Body (Markdown)',
-      description: 'Supports markdown formatting',
-      type: 'text',
+      title: 'Article Body',
+      description: 'Rich markdown editor — supports headings, bold, italic, lists, and links',
+      type: 'markdown',
     }),
     defineField({
       name: 'images',
