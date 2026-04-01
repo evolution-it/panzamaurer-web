@@ -1,122 +1,172 @@
-import Image from "next/image";
-import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import PageHero from "@/components/PageHero";
-import Footer from "@/components/Footer";
+import Image from 'next/image'
+import Link from 'next/link'
+import Navbar from '@/components/Navbar'
+import PageHero from '@/components/PageHero'
+import Footer from '@/components/Footer'
+import { getDraftModeClient } from '@/sanity/draftMode'
+import { urlFor } from '@/sanity/image'
+import { ATTORNEYS_LIST_QUERY } from '@/sanity/queries/attorneys'
+import { PAGE_BY_SLUG_QUERY } from '@/sanity/queries/pages'
 
 export const metadata = {
-  title: "Our Attorneys | Panza Maurer",
-};
-
-interface Attorney {
-  name: string;
-  role: string;
-  image: string;
+  title: 'Our Attorneys | Panza Maurer',
 }
 
-const partners: Attorney[] = [
-  { name: "Thomas F. Panza", role: "Founding Partner", image: "thomas-f-panza.png" },
-  { name: "Susan Horovitz Maurer", role: "Founding Partner", image: "susan-horovitz-maurer.png" },
-  { name: "Dana Panza Macdonald", role: "Managing Partner", image: "dana-panza-macdonald.png" },
-  { name: "Benjamin P. Bean", role: "Partner", image: "benjamin-p-bean.png" },
-  { name: "Jennifer Maurer Bean", role: "Partner", image: "jennifer-maurer-bean.png" },
-  { name: "Richard A. Beauchamp", role: "Partner", image: "richard-a-beauchamp.png" },
-  { name: "Robert M. Bulfin", role: "Partner", image: "robert-m-bulfin.png" },
-  { name: "Jose Felix Diaz", role: "Partner", image: "jose-felix-diaz.png" },
-  { name: "Lorraine Duthe", role: "Partner", image: "lorraine-duthe.png" },
-  { name: "James H. Horton, IV", role: "Partner", image: "james-h-horton-iv.png" },
-  { name: "Gregory L. McDermott", role: "Partner", image: "gregory-l-mcdermott.png" },
-  { name: "Elizabeth L. Pedersen", role: "Partner", image: "elizabeth-l-pedersen.png" },
-  { name: "Louise Wilhite St. Laurent", role: "Partner", image: "louise-wilhite-st-laurent.png" },
-  { name: "Samantha Evans Saltzburg", role: "Senior Associate", image: "samantha-evans-saltzburg.png" },
-  { name: "Jennifer K. Graner", role: "Senior Associate", image: "jennifer-k-graner.png" },
-  { name: "Andrew L. Myers", role: "Senior Associate", image: "andrew-l-myers.png" },
-  { name: "Trevor D. Scott", role: "Senior Associate", image: "trevor-d-scott.png" },
-  { name: "Julia C. Marano", role: "Associate", image: "julia-marano.png" },
-];
+type AttorneyListItem = {
+  _id: string
+  name: string
+  role: string
+  slug: { current: string }
+  image?: { asset: { _ref: string } } | null
+  type: string
+  order: number
+}
 
-const ofCounsel: Attorney[] = [
-  { name: "Brian Ballard", role: "Of Counsel Attorney", image: "brian-ballard.png" },
-  { name: "Brad Burleson", role: "Of Counsel Attorney", image: "brad-burleson.png" },
-  { name: "David Childs", role: "Of Counsel Attorney", image: "david-childs.png" },
-  { name: "Jan Gorrie", role: "Of Counsel Attorney", image: "jan-gorrie.png" },
-  { name: "Adrian Lukis", role: "Of Counsel Attorney", image: "adrian-lukis.png" },
-  { name: "Syl Luks", role: "Of Counsel Attorney", image: "syl-luks.png" },
-  { name: "Monica Rodriguez", role: "Of Counsel Attorney", image: "monica-rodriquez.png" },
-  { name: "Eileen Stuart", role: "Of Counsel Attorney", image: "eileen-stuart.png" },
-  { name: "Abby Vail", role: "Of Counsel Attorney", image: "abby-vail.png" },
-];
+type TeamSection = {
+  _type: 'teamSection'
+  _key: string
+  heading?: string
+  attorneys?: AttorneyListItem[]
+}
 
-function AttorneyCard({ attorney }: { attorney: Attorney }) {
-  const slug = attorney.name
-    .toLowerCase()
-    .replace(/[\s.,]+/g, "-")
-    .replace(/-+/g, "-");
+type PageConfig = {
+  sections?: { _type: string; _key: string; heading?: string; attorneys?: AttorneyListItem[] }[]
+}
+
+function AttorneyCard({ attorney }: { attorney: AttorneyListItem }) {
+  const imgSrc = attorney.image
+    ? urlFor(attorney.image).width(400).height(400).url()
+    : null
+
   return (
     <Link
-      href={`/attorneys/${slug}`}
-      className="group overflow-hidden rounded-xl border border-slate-200 bg-white"
+      href={`/attorneys/${attorney.slug.current}`}
+      className='group overflow-hidden rounded-xl border border-slate-200 bg-white'
     >
-      <div className="relative aspect-square w-full overflow-hidden">
-        <Image
-          src={`/images/attorneys/${attorney.image}`}
-          alt={attorney.name}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
-          className="object-contain transition-transform duration-300 group-hover:scale-105"
-        />
+      <div className='relative aspect-square w-full overflow-hidden bg-slate-100'>
+        {imgSrc ? (
+          <Image
+            src={imgSrc}
+            alt={attorney.name}
+            fill
+            sizes='(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw'
+            className='object-contain transition-transform duration-300 group-hover:scale-105'
+          />
+        ) : (
+          <div className='flex h-full items-center justify-center text-slate-300'>
+            <svg className='h-16 w-16' fill='currentColor' viewBox='0 0 24 24'>
+              <path d='M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z' />
+            </svg>
+          </div>
+        )}
       </div>
-      <div className="px-4 py-4">
-        <h3 className="font-[family-name:var(--font-noto)] text-[20px] font-semibold text-black">
+      <div className='px-4 py-4'>
+        <h3 className='font-[family-name:var(--font-noto)] text-[20px] font-semibold text-black'>
           {attorney.name}
         </h3>
-        <p className="font-[family-name:var(--font-noto)] text-[16px] text-slate-500">
+        <p className='font-[family-name:var(--font-noto)] text-[16px] text-slate-500'>
           {attorney.role}
         </p>
       </div>
     </Link>
-  );
+  )
 }
 
-export default function AttorneysPage() {
+function AttorneyGroup({
+  heading,
+  attorneys,
+  large,
+}: {
+  heading?: string
+  attorneys: AttorneyListItem[]
+  large?: boolean
+}) {
+  if (attorneys.length === 0) return null
   return (
-    <div className="flex min-h-screen flex-col items-center">
+    <section className='bg-white'>
+      <div className='mx-auto max-w-[1440px] px-8 py-20 lg:px-28'>
+        {heading && (
+          <h2 className='mb-12 font-[family-name:var(--font-hanken)] text-3xl font-semibold text-gray-950'>
+            {heading}
+          </h2>
+        )}
+        <div
+          className={`grid grid-cols-1 gap-10 ${
+            large ? 'sm:grid-cols-3 lg:grid-cols-4' : 'sm:grid-cols-3'
+          }`}
+        >
+          {attorneys.map((attorney) => (
+            <AttorneyCard key={attorney._id} attorney={attorney} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export default async function AttorneysPage() {
+  const { sanityClient, cacheTags } = await getDraftModeClient()
+
+  const [pageConfig, allAttorneys] = await Promise.all([
+    sanityClient
+      .fetch<PageConfig>(PAGE_BY_SLUG_QUERY, { slug: 'attorneys' }, cacheTags(['attorneys', 'pages']))
+      .catch(() => null),
+    sanityClient
+      .fetch<AttorneyListItem[]>(ATTORNEYS_LIST_QUERY, {}, cacheTags(['attorneys']))
+      .catch(() => [] as AttorneyListItem[]),
+  ])
+
+  // Build an id→attorney lookup for resolving weak refs that GROQ may not expand
+  const attorneyById = Object.fromEntries(allAttorneys.map((a) => [a._id, a]))
+
+  // Extract teamSection blocks from the page config
+  const teamSections: TeamSection[] = (pageConfig?.sections ?? [])
+    .filter((s): s is TeamSection => s._type === 'teamSection')
+    .map((s) => ({
+      ...s,
+      // Filter nulls from weak refs; fall back to lookup if GROQ returned partial data
+      attorneys: (s.attorneys ?? [])
+        .filter((a): a is AttorneyListItem => a != null && a.slug != null)
+        .map((a) => attorneyById[a._id] ?? a),
+    }))
+
+  // Fallback: if no page config, show type-based groups
+  const fallbackSections: TeamSection[] =
+    teamSections.length === 0
+      ? [
+          {
+            _type: 'teamSection',
+            _key: 'fallback-our-attorneys',
+            heading: 'Our Attorneys',
+            attorneys: allAttorneys.filter((a) => a.type === 'Our Attorneys'),
+          },
+          {
+            _type: 'teamSection',
+            _key: 'fallback-of-counsel',
+            heading: 'Of Counsel',
+            attorneys: allAttorneys.filter((a) => a.type === 'Of Counsel'),
+          },
+        ]
+      : []
+
+  const sections = teamSections.length > 0 ? teamSections : fallbackSections
+
+  return (
+    <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className="w-full pt-[145px] lg:pt-[109px]">
-        <PageHero
-          title="Our Attorneys"
-          breadcrumbs={[
-            { label: "Home", href: "/" },
-            { label: "Our Attorneys" },
-          ]}
-        />
+      <main className='w-full pt-[145px] lg:pt-[109px]'>
+        <PageHero title='Our Attorneys' />
 
-        {/* Partners */}
-        <section className="bg-white">
-          <div className="mx-auto max-w-[1440px] px-8 py-20 lg:px-28">
-            <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:grid-cols-4">
-              {partners.map((attorney) => (
-                <AttorneyCard key={attorney.name} attorney={attorney} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Of Counsel */}
-        <section className="bg-white">
-          <div className="mx-auto max-w-[1440px] px-8 pb-20 lg:px-28">
-            <h2 className="mb-12 font-[family-name:var(--font-hanken)] text-3xl font-semibold text-gray-950">
-              Of Counsel
-            </h2>
-            <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
-              {ofCounsel.map((attorney) => (
-                <AttorneyCard key={attorney.image} attorney={attorney} />
-              ))}
-            </div>
-          </div>
-        </section>
+        {sections.map((section, index) => (
+          <AttorneyGroup
+            key={section._key}
+            heading={section.heading}
+            attorneys={section.attorneys ?? []}
+            large={index === 0}
+          />
+        ))}
       </main>
       <Footer />
     </div>
-  );
+  )
 }

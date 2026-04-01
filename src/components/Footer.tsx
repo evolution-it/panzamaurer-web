@@ -1,78 +1,94 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
+import { client } from '@/sanity/client';
+import { LOCATIONS_QUERY } from '@/sanity/queries/locations';
+import { SITE_SETTINGS_QUERY } from '@/sanity/queries/siteSettings';
 
-const locationLinks = [
-  {
-    name: "Tallahassee",
-    address: [
-      "201 East Park Avenue | Suite 200-A",
-      "Tallahassee, FL 32301",
-    ],
-    phone: "(850) 681-0980",
-  },
-  {
-    name: "Fort Lauderdale",
-    address: [
-      "Coastal Tower",
-      "2400 East Commercial Blvd | Suite 905",
-      "Fort Lauderdale, FL 33308",
-    ],
-    phone: "(954) 390-0100",
-  },
-  {
-    name: "Coral Gables",
-    address: [
-      "The Alhambra Building",
-      "2 Alhambra Plaza | Suite 102",
-      "Coral Gables, FL 33134",
-    ],
-    phone: "(786) 534-6162",
-  },
-];
+type Location = {
+  _id: string;
+  name: string;
+  building?: string;
+  address?: string[];
+  city?: string;
+  phone?: string;
+};
 
-export default function Footer() {
+type SiteSettings = {
+  footerTagline?: string;
+};
+
+export default async function Footer() {
+  const [locations, settings] = await Promise.all([
+    client
+      .fetch<Location[]>(LOCATIONS_QUERY, {}, { next: { tags: ['locations'] } })
+      .catch(() => [] as Location[]),
+    client
+      .fetch<SiteSettings>(
+        SITE_SETTINGS_QUERY,
+        {},
+        { next: { tags: ['siteSettings'] } },
+      )
+      .catch(() => null),
+  ]);
+
+  const tagline =
+    settings?.footerTagline ??
+    'Copyright © Panza, Maurer & Maynard 2026 All Rights Reserved.';
+
   return (
-    <footer className="w-full bg-dark-navy">
-      <div className="mx-auto max-w-[1440px] px-8 py-12 lg:px-28 lg:py-16">
-        <div className="flex flex-col gap-20">
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
+    <footer className='w-full bg-dark-navy'>
+      <div className='mx-auto max-w-[1440px] px-8 py-12 lg:px-28 lg:py-16'>
+        <div className='flex flex-col gap-8'>
+          <Link href='/' className='flex-shrink-0'>
             <Image
-              src="/images/footer-logo.svg"
-              alt="Panza Maurer"
+              src='/images/footer-logo.svg'
+              alt='Panza Maurer'
               width={333}
               height={64}
             />
           </Link>
 
-          {/* Location columns */}
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {locationLinks.map((loc) => (
-              <div key={loc.name} className="flex flex-col gap-4">
-                <h3 className="font-[family-name:var(--font-noto)] text-2xl font-medium leading-[34px] text-white">
+          <p className='font-[family-name:var(--font-noto)] text-base font-normal text-gray-400'>
+            {tagline}
+          </p>
+
+          <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
+            {locations.map((loc) => (
+              <div key={loc._id} className='flex flex-col gap-4'>
+                <h3 className='font-[family-name:var(--font-noto)] text-2xl font-medium leading-[34px] text-white'>
                   {loc.name}
                 </h3>
-                <div className="flex flex-col gap-1">
-                  {loc.address.map((line, i) => (
+                <div className='flex flex-col gap-1'>
+                  {loc.building && (
+                    <p className='font-[family-name:var(--font-noto)] text-base font-normal leading-[26px] text-gray-300'>
+                      {loc.building}
+                    </p>
+                  )}
+                  {loc.address?.map((line, i) => (
                     <p
                       key={i}
-                      className="font-[family-name:var(--font-noto)] text-base font-normal leading-[26px] text-gray-300"
+                      className='font-[family-name:var(--font-noto)] text-base font-normal leading-[26px] text-gray-300'
                     >
                       {line}
                     </p>
                   ))}
-                  <p className="mt-1 font-[family-name:var(--font-noto)] text-base font-normal leading-[26px] text-gray-300">
-                    {loc.phone}
-                  </p>
+                  {loc.city && (
+                    <p className='font-[family-name:var(--font-noto)] text-base font-normal leading-[26px] text-gray-300'>
+                      {loc.city}
+                    </p>
+                  )}
+                  {loc.phone && (
+                    <p className='mt-1 font-[family-name:var(--font-noto)] text-base font-normal leading-[26px] text-gray-300'>
+                      {loc.phone}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Copyright */}
-          <p className="font-[family-name:var(--font-noto)] text-base font-normal leading-6 text-gray-400">
-            Copyright &copy; Panza, Maurer &amp; Maynard 2026 All Rights
-            Reserved.
+          <p className='font-[family-name:var(--font-noto)] text-sm font-normal text-gray-400'>
+            Copyright © Panza, Maurer &amp; Maynard 2026 All Rights Reserved.
           </p>
         </div>
       </div>

@@ -3,20 +3,34 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
-const videos = [
+const FALLBACK_VIDEOS = [
   '/assets/sea-view.mp4',
   '/assets/cityview.mp4',
   '/assets/townhouse.mp4',
 ];
 
-export default function Hero() {
+export default function Hero({
+  heading,
+  subtitle,
+  videos,
+}: {
+  heading?: string
+  subtitle?: string
+  videos?: string[]
+}) {
+  const displayVideos = videos && videos.length > 0 ? videos : FALLBACK_VIDEOS;
   const [activeIndex, setActiveIndex] = useState(0);
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([null, null, null]);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  const displayHeading = heading ?? 'We Know Florida';
+  const displaySubtitle =
+    subtitle ??
+    'Representing businesses, regulated industries and institutions for more than 50 years.';
 
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => {
-        const next = (prev + 1) % videos.length;
+        const next = (prev + 1) % displayVideos.length;
         const nextVideo = videoRefs.current[next];
         if (nextVideo) {
           nextVideo.currentTime = 0;
@@ -27,12 +41,11 @@ export default function Hero() {
     }, 6000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [displayVideos.length]);
 
   return (
     <section className='relative flex h-[803px] w-full items-end justify-center overflow-hidden bg-white'>
-      {/* Background Videos with crossfade */}
-      {videos.map((src, i) => (
+      {displayVideos.map((src, i) => (
         <video
           key={src}
           ref={(el) => {
@@ -52,7 +65,6 @@ export default function Hero() {
         </video>
       ))}
 
-      {/* Dark overlay gradient */}
       <div
         className='absolute inset-0'
         style={{
@@ -68,18 +80,15 @@ export default function Hero() {
         }}
       />
 
-      {/* Content */}
       <div className='relative z-10 mx-auto w-full max-w-[1280px] px-8 pb-28 pt-36'>
         <div className='max-w-[600px]'>
           <h1 className='pb-3 font-[family-name:var(--font-hanken)] text-[40px] font-extrabold uppercase leading-[1.1] text-gray-50 md:whitespace-nowrap md:text-[70px]'>
-            We Know Florida
+            {displayHeading}
           </h1>
           <Image src='/images/underline-1.svg' alt='' width={122} height={4} />
           <div className='mt-4 flex items-baseline gap-[15px]'>
             <p className='font-[family-name:var(--font-noto)] text-[27px] font-medium leading-[40px] text-gray-50'>
-              Representing businesses, regulated industries and institutions for
-              more than <span className='font-black'>50</span>
-              <span className='font-bold'> years.</span>
+              {displaySubtitle}
             </p>
           </div>
         </div>
