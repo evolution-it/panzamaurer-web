@@ -1,6 +1,6 @@
 import { client } from '@/sanity/client'
 import { SITE_SETTINGS_QUERY } from '@/sanity/queries/siteSettings'
-import { PAGE_BY_SLUG_QUERY } from '@/sanity/queries/pages'
+import { NAV_PRACTICE_AREAS_QUERY } from '@/sanity/queries/practiceAreas'
 import NavbarClient, { NavLink, PracticeAreaLink } from './NavbarClient'
 
 // Fallback nav in case Sanity is unavailable
@@ -42,30 +42,15 @@ type PracticeAreaRef = {
   _id: string
   title: string
   slug: { current: string }
-  showInNavDropdown?: boolean
-}
-
-type PageSection = {
-  _type: string
-  practiceAreas?: PracticeAreaRef[]
-}
-
-type PracticeAreasPageConfig = {
-  sections?: PageSection[]
 }
 
 export default async function Navbar() {
-  // Fetch both in parallel
-  const [settings, practiceAreasPage] = await Promise.all([
+  const [settings, navPracticeAreas] = await Promise.all([
     client
       .fetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { tags: ['siteSettings'] } })
       .catch(() => null),
     client
-      .fetch<PracticeAreasPageConfig>(
-        PAGE_BY_SLUG_QUERY,
-        { slug: 'practice-areas' },
-        { next: { tags: ['pages', 'practiceAreas'] } },
-      )
+      .fetch<PracticeAreaRef[]>(NAV_PRACTICE_AREAS_QUERY, {}, { next: { tags: ['practiceAreas'] } })
       .catch(() => null),
   ])
 
@@ -80,21 +65,12 @@ export default async function Navbar() {
       : FALLBACK_NAV
 
   // ── Practice areas dropdown ──────────────────────────────────────────────
-  // Order is driven by the practiceAreasSection of the Practice Areas page config,
-  // so one edit in the Studio updates both the page and the nav dropdown.
-  const practiceAreasSection = practiceAreasPage?.sections?.find(
-    (s) => s._type === 'practiceAreasSection',
-  )
-
+  // Driven directly by the showInNavDropdown toggle on each practice area document.
   let practiceAreaLinks: PracticeAreaLink[]
 
-  const resolvedPracticeAreas = (practiceAreasSection?.practiceAreas ?? []).filter(
-    (pa): pa is PracticeAreaRef => pa != null && pa.slug != null && pa.showInNavDropdown !== false,
-  )
-
-  if (resolvedPracticeAreas.length > 0) {
+  if (navPracticeAreas && navPracticeAreas.length > 0) {
     practiceAreaLinks = [
-      ...resolvedPracticeAreas.map((pa) => ({
+      ...navPracticeAreas.map((pa) => ({
         label: pa.title,
         slug: pa.slug.current,
       })),
