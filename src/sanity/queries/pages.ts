@@ -19,8 +19,7 @@ const SECTION_FIELDS = groq`
     role,
     slug,
     image,
-    type,
-    order
+    type
   },
   "locations": locations[]-> {
     _id,

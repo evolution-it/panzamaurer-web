@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 
 export const attorney = defineType({
   name: 'attorney',
@@ -32,6 +33,7 @@ export const attorney = defineType({
         list: [
           { title: 'Our Attorneys', value: 'Our Attorneys' },
           { title: 'Of Counsel', value: 'Of Counsel' },
+          { title: 'Featured Only', value: 'Featured Only' },
         ],
         layout: 'radio',
       },
@@ -48,12 +50,7 @@ export const attorney = defineType({
       type: 'image',
       options: { hotspot: true },
     }),
-    defineField({
-      name: 'order',
-      title: 'Display Order',
-      description: 'Lower numbers appear first within the same type group',
-      type: 'number',
-    }),
+    orderRankField({ type: 'attorney' }),
     defineField({
       name: 'status',
       title: 'Status',
@@ -123,11 +120,5 @@ export const attorney = defineType({
   preview: {
     select: { title: 'name', subtitle: 'role', media: 'image' },
   },
-  orderings: [
-    {
-      title: 'Display Order',
-      name: 'orderAsc',
-      by: [{ field: 'order', direction: 'asc' }],
-    },
-  ],
+  orderings: [orderRankOrdering],
 })

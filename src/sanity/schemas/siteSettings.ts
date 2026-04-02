@@ -26,18 +26,6 @@ export const siteSettings = defineType({
       type: 'string',
     }),
     defineField({
-      name: 'footerLocations',
-      title: 'Footer Locations',
-      description: 'Locations shown in the footer (in display order)',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'reference',
-          to: [{ type: 'location' }],
-        }),
-      ],
-    }),
-    defineField({
       name: 'navItems',
       title: 'Navigation Items',
       description: 'Ordered list of links in the top navigation bar',
@@ -68,6 +56,18 @@ export const siteSettings = defineType({
               return { title, subtitle: dropdown ? `${subtitle} ▾ (dropdown)` : subtitle }
             },
           },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'footerLocations',
+      title: 'Footer Locations',
+      description: 'Locations shown in the footer (in display order)',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{ type: 'location' }],
         }),
       ],
     }),

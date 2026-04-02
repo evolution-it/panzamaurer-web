@@ -1,14 +1,13 @@
 import { groq } from 'next-sanity'
 
 export const ATTORNEYS_LIST_QUERY = groq`
-  *[_type == "attorney" && status == "published"] | order(order asc) {
+  *[_type == "attorney" && status == "published"] | order(orderRank asc) {
     _id,
     name,
     role,
     slug,
     image,
-    type,
-    order
+    type
   }
 `
 
@@ -39,7 +38,7 @@ export const ATTORNEY_SLUGS_QUERY = groq`
 `
 
 export const TEAM_ATTORNEYS_QUERY = groq`
-  *[_type == "attorney" && status == "published" && type == "Our Attorneys"] | order(order asc) [0...5] {
+  *[_type == "attorney" && status == "published" && type == "Our Attorneys"] | order(orderRank asc) [0...5] {
     _id,
     name,
     role,
