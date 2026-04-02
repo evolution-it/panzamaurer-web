@@ -18,12 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
-      - name: Checkout main
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: staging
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -32,52 +33,59 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Merge staging into main
-        run: |
-          git fetch origin staging
-          git merge origin/staging --no-ff -m "chore: promote staging to main"
-
       - name: Calculate next version
         id: version
         run: |
-          # Get latest semver tag, default to v0.0.0 if none exist
+          git fetch --tags
           LATEST=$(git tag --list 'v*' --sort=-version:refname | head -n 1)
           if [ -z "$LATEST" ]; then
             LATEST="v0.0.0"
           fi
-
           echo "Latest tag: $LATEST"
 
-          # Strip leading 'v' and split into parts
           VERSION="${LATEST#v}"
           MAJOR=$(echo "$VERSION" | cut -d. -f1)
           MINOR=$(echo "$VERSION" | cut -d. -f2)
           PATCH=$(echo "$VERSION" | cut -d. -f3)
 
           case "${{ github.event.inputs.version_type }}" in
-            major)
-              MAJOR=$((MAJOR + 1))
-              MINOR=0
-              PATCH=0
-              ;;
-            minor)
-              MINOR=$((MINOR + 1))
-              PATCH=0
-              ;;
-            patch)
-              PATCH=$((PATCH + 1))
-              ;;
+            major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH + 1)) ;;
           esac
 
           NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
           echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
           echo "New tag: $NEW_TAG"
 
-      - name: Push main
-        run: git push origin main
+      - name: Create PR from staging to main
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_URL=$(gh pr create \
+            --base main \
+            --head staging \
+            --title "Release ${{ steps.version.outputs.new_tag }}" \
+            --body "Automated release ${{ steps.version.outputs.new_tag }} promoted from staging to main." \
+            --repo ${{ github.repository }})
+          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+          echo "Created PR: $PR_URL"
+
+      - name: Merge PR into main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ steps.pr.outputs.pr_url }}" \
+            --merge \
+            --admin \
+            --repo ${{ github.repository }}
 
       - name: Create and push version tag
         run: |
+          git fetch origin main
+          git checkout main
+          git pull origin main
           git tag ${{ steps.version.outputs.new_tag }} -m "Release ${{ steps.version.outputs.new_tag }}"
           git push origin ${{ steps.version.outputs.new_tag }}
 
