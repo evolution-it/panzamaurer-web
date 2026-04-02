@@ -10,11 +10,14 @@ import {
 import { apiVersion } from '../env'
 import { PAGE_SCHEMA_VERSION } from '../schemas/page'
 import { NEWS_ARTICLE_SCHEMA_VERSION } from '../schemas/newsArticle'
+import { batchDelete } from '../utils/batchMutate'
 
 const SCHEMA_VERSIONS: Record<string, string> = {
   page: PAGE_SCHEMA_VERSION,
   newsArticle: NEWS_ARTICLE_SCHEMA_VERSION,
 }
+
+const MAX_CONTENT_SNAPSHOTS_TOTAL = 20
 
 const SYSTEM_FIELDS = new Set(['_id', '_type', '_rev', '_createdAt', '_updatedAt'])
 
@@ -31,10 +34,10 @@ function getSourceTitle(doc: Record<string, unknown>, fallbackId: string): strin
 }
 
 /**
- * Wraps Sanity's default PublishAction so that every publish automatically:
- *  1. Creates a globalSnapshot (full JSON of all published docs + the item being published)
- *  2. Creates a contentSnapshot for the specific document, linked to the globalSnapshot
+ * Wraps Sanity's default PublishAction so that every publish automatically
+ * creates a contentSnapshot for the specific document being published.
  *
+ * Global snapshots are created separately by the weekly cron job, not here.
  * Snapshot creation is fire-and-forget — errors are logged silently so a
  * snapshot failure never blocks or reverts the publish.
  */
@@ -61,29 +64,16 @@ export function createAutoPublishSnapshotAction(
       const label = `Auto: ${sourceTitle} published on ${new Date(now).toLocaleDateString()}`
 
       try {
-        // Fetch all currently published docs (excluding snapshots themselves)
-        const allPublished = await client.fetch<Record<string, unknown>[]>(
-          `*[!(_id in path("drafts.**")) && _type != "contentSnapshot" && _type != "globalSnapshot"]`,
+        // Prune oldest snapshots globally before creating the new one so the
+        // total never exceeds MAX_CONTENT_SNAPSHOTS_TOTAL. Query oldest-first.
+        const existing = await client.fetch<{ _id: string }[]>(
+          `*[_type == "contentSnapshot"] | order(createdAt asc) { _id }`,
         )
+        if (existing.length >= MAX_CONTENT_SNAPSHOTS_TOTAL) {
+          const toDelete = existing.slice(0, existing.length - MAX_CONTENT_SNAPSHOTS_TOTAL + 1)
+          await batchDelete(client, toDelete.map(({ _id }) => _id))
+        }
 
-        // Build the global snapshot data: all published docs, with the item being
-        // published replacing its current published version (or added if new)
-        const otherDocs = allPublished.filter((d) => d._id !== id)
-        const combinedDocs = [...otherDocs, { ...docToSnapshot, _id: id, _type: type }]
-
-        // 1. Create the global snapshot
-        const globalSnap = await client.create({
-          _type: 'globalSnapshot',
-          label,
-          createdAt: now,
-          createdBy: author,
-          triggerDocumentId: id,
-          triggerDocumentType: type,
-          triggerDocumentTitle: sourceTitle,
-          snapshotData: JSON.stringify(combinedDocs),
-        })
-
-        // 2. Create the per-document content snapshot linked to the global snapshot
         await client.create({
           _type: 'contentSnapshot',
           label,
@@ -94,7 +84,6 @@ export function createAutoPublishSnapshotAction(
           snapshotData: JSON.stringify(stripSystemFields(docToSnapshot)),
           createdAt: now,
           createdBy: author,
-          globalSnapshot: { _type: 'reference', _ref: globalSnap._id },
         })
       } catch (err) {
         // Never block the publish — log silently

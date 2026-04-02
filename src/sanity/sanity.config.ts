@@ -8,6 +8,9 @@ import { projectId, dataset, apiVersion } from './env'
 import { resolve } from './presentation/resolve'
 import { createAutoPublishSnapshotAction } from './actions/autoPublishSnapshotAction'
 import { SnapshotHistory } from './views/SnapshotHistory'
+import { GlobalSnapshotRestore } from './views/GlobalSnapshotRestore'
+import { ContentSnapshotManager } from './views/ContentSnapshotManager'
+import { UnpublishedChanges } from './views/UnpublishedChanges'
 
 const SNAPSHOT_EXCLUDED_TYPES = ['contentSnapshot', 'globalSnapshot']
 
@@ -66,7 +69,17 @@ export default defineConfig({
             S.listItem()
               .title('Attorneys')
               .schemaType('attorney')
-              .child(S.documentTypeList('attorney').title('Attorneys')),
+              .child(
+                S.documentTypeList('attorney').child((documentId) =>
+                  S.document()
+                    .documentId(documentId)
+                    .schemaType('attorney')
+                    .views([
+                      S.view.form(),
+                      S.view.component(SnapshotHistory).title('Version History').id('version-history'),
+                    ]),
+                ),
+              ),
             orderableDocumentListDeskItem({ type: 'practiceArea', title: 'Practice Areas', S, context }),
             S.listItem()
               .title('Locations')
@@ -77,27 +90,35 @@ export default defineConfig({
               .title('Unpublished Changes')
               .id('unpublishedChanges')
               .child(
-                S.documentList()
-                  .title('Unpublished Changes')
-                  .filter('_id in path("drafts.**") && _type != "contentSnapshot" && _type != "globalSnapshot"')
-                  .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }]),
+                S.component(UnpublishedChanges)
+                  .id('unpublished-changes')
+                  .title('Unpublished Changes'),
               ),
             S.divider(),
             S.listItem()
-              .title('Global Snapshots')
-              .schemaType('globalSnapshot')
+              .title('Developers')
+              .id('developers')
               .child(
-                S.documentTypeList('globalSnapshot')
-                  .title('Global Snapshots')
-                  .defaultOrdering([{ field: 'createdAt', direction: 'desc' }]),
-              ),
-            S.listItem()
-              .title('Content Snapshots')
-              .schemaType('contentSnapshot')
-              .child(
-                S.documentTypeList('contentSnapshot')
-                  .title('Content Snapshots')
-                  .defaultOrdering([{ field: 'createdAt', direction: 'desc' }]),
+                S.list()
+                  .title('Developers')
+                  .items([
+                    S.listItem()
+                      .title('Global Snapshots')
+                      .id('globalSnapshots')
+                      .child(
+                        S.component(GlobalSnapshotRestore)
+                          .id('global-snapshot-restore')
+                          .title('Global Snapshots'),
+                      ),
+                    S.listItem()
+                      .title('Content Snapshots')
+                      .id('contentSnapshots')
+                      .child(
+                        S.component(ContentSnapshotManager)
+                          .id('content-snapshot-manager')
+                          .title('Content Snapshots'),
+                      ),
+                  ]),
               ),
           ]),
     }),
