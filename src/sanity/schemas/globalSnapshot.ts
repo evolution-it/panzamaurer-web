@@ -63,9 +63,11 @@ export const globalSnapshot = defineType({
     },
     prepare({ title, triggerType, triggerTitle, createdAt }) {
       const date = createdAt ? new Date(createdAt).toLocaleString() : ''
+      const trigger =
+        triggerType ? `${triggerType}: ${triggerTitle ?? ''} — ` : ''
       return {
         title: title ?? 'Global Snapshot',
-        subtitle: `${triggerType ?? ''}: ${triggerTitle ?? ''} — ${date}`,
+        subtitle: `${trigger}${date}`,
       }
     },
   },
