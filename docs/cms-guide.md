@@ -9,12 +9,12 @@ This guide explains how to use the Sanity Studio content management system to ed
 1. [Getting Around](#getting-around)
 2. [Publishing & Version History](#publishing--version-history)
 3. [Site Settings](#site-settings)
-4. [Pages](#pages)
+4. [News Articles](#news-articles)
+5. [Attorneys](#attorneys)
+6. [Practice Areas](#practice-areas)
+7. [Locations](#locations)
+8. [Pages](#pages)
    - [Page Sections](#page-sections)
-5. [News Articles](#news-articles)
-6. [Attorneys](#attorneys)
-7. [Practice Areas](#practice-areas)
-8. [Locations](#locations)
 9. [Unpublished Changes](#unpublished-changes)
 
 ---
@@ -54,102 +54,6 @@ Each nav item has:
 - **Has Dropdown** — when enabled, hovering this link reveals the Practice Areas sub-menu
 
 Drag nav items to reorder them.
-
----
-
-## Pages
-
-Pages are the full-page documents that make up the website (Home, About, Attorneys, Contact, etc.).
-
-| Field | Purpose |
-|-------|---------|
-| Page Title | Used as the browser tab `<title>` tag |
-| Navigation Label | Label shown in the nav bar — leave blank to use the Page Title |
-| URL Slug | The URL path for the page (e.g. `about`, `contact`). Use `home` for the homepage |
-| SEO Description | The meta description tag used by search engines |
-| Show in Navigation | Whether this page appears in the nav bar |
-| Navigation Order | Position in the nav bar; lower numbers appear first |
-| Status | `Published` = live; `Archived` = returns a 404 and is removed from navigation |
-| Page Sections | The visual content blocks that make up the page body (see below) |
-
-### Page Sections
-
-Each page is built from one or more **sections**. Sections can be added, removed, and reordered by dragging. The available section types are:
-
-#### Hero Banner
-The large full-screen banner at the top of a page.
-
-| Field | Purpose |
-|-------|---------|
-| Heading | The main large headline |
-| Bold Prefix | Optional bold text shown before the subtitle (e.g. "For more than five decades,") |
-| Subtitle / Body | Supporting text shown below the heading |
-| Button Label | Text on the call-to-action button |
-| Button URL | Where the button links to |
-| Background Videos | Upload `.mp4` files to cycle as the hero background video. If left empty, the built-in default videos are used |
-
-#### About / Intro
-The firm introduction block, typically used on the homepage.
-
-| Field | Purpose |
-|-------|---------|
-| Heading | Section heading (default: "About Our Firm") |
-| Image | A photo displayed alongside the text |
-| Mission Statement / Quote | A highlighted pull-quote or mission statement |
-| Body Text | Rich text body supporting headings, bold, italic, lists, and links |
-
-#### Call to Action
-A prominent prompt section, typically used to drive visitors to contact the firm or meet the team.
-
-| Field | Purpose |
-|-------|---------|
-| Heading | Section heading (default: "Get in Touch") |
-| Subtitle (large) | Large supporting text shown below the heading |
-| Body Text | Smaller body text |
-| Button Label | Text on the button (default: "Meet Our Team") |
-| Button URL | Where the button links to (default: `/attorneys`) |
-
-#### Text Block
-A simple heading + rich text block for general content.
-
-| Field | Purpose |
-|-------|---------|
-| Heading | Optional section heading |
-| Body | Rich text supporting headings, bold, italic, lists, and links |
-
-#### Team / Attorneys
-Displays a grid of attorney cards. Use this to feature specific attorneys on any page.
-
-| Field | Purpose |
-|-------|---------|
-| Section Heading | Heading shown above the attorney grid (default: "Our Team") |
-| Attorneys | Pick and order specific attorneys to display. Drag to reorder within this section |
-
-> Any attorney — including **Featured Only** attorneys — can be added to this section regardless of their category.
-
-#### Locations
-Displays a grid of office location cards.
-
-| Field | Purpose |
-|-------|---------|
-| Section Heading | Heading shown above the locations grid (default: "Our Locations") |
-| Office Locations | Pick and order the offices to display. Drag to reorder |
-
-#### Practice Areas
-Displays a grid of practice area cards.
-
-| Field | Purpose |
-|-------|---------|
-| Section Heading | Heading shown above the grid (default: "Practice Areas") |
-| Practice Areas | Pick and order the practice areas to display. Drag to reorder |
-
-#### News / Articles
-Automatically displays the most recent published news articles.
-
-| Field | Purpose |
-|-------|---------|
-| Section Heading | Heading shown above the articles (default: "Latest News") |
-| Number of Articles to Show | How many articles to display (1–20, default: 3) |
 
 ---
 
@@ -246,6 +150,102 @@ Office locations used in the footer and on any page that includes a **Locations*
 | Display Order | Lower numbers appear first in location lists |
 
 > The footer location order is controlled separately in **Site Settings → Footer Locations**.
+
+---
+
+## Pages
+
+Pages are the full-page documents that make up the website (Home, About, Attorneys, Contact, etc.).
+
+| Field | Purpose |
+|-------|---------|
+| Page Title | Used as the browser tab `<title>` tag |
+| Navigation Label | Label shown in the nav bar — leave blank to use the Page Title |
+| URL Slug | The URL path for the page (e.g. `about`, `contact`). Use `home` for the homepage |
+| SEO Description | The meta description tag used by search engines |
+| Show in Navigation | Whether this page appears in the nav bar |
+| Navigation Order | Position in the nav bar; lower numbers appear first |
+| Status | `Published` = live; `Archived` = returns a 404 and is removed from navigation |
+| Page Sections | The visual content blocks that make up the page body (see below) |
+
+### Page Sections
+
+Each page is built from one or more **sections**. Sections can be added, removed, and reordered by dragging. The available section types are:
+
+#### Hero Banner
+The large full-screen banner at the top of a page.
+
+| Field | Purpose |
+|-------|---------|
+| Heading | The main large headline |
+| Bold Prefix | Optional bold text shown before the subtitle (e.g. "For more than five decades,") |
+| Subtitle / Body | Supporting text shown below the heading |
+| Button Label | Text on the call-to-action button |
+| Button URL | Where the button links to |
+| Background Videos | Upload `.mp4` files to cycle as the hero background video. If left empty, the built-in default videos are used |
+
+#### About / Intro
+The firm introduction block, typically used on the homepage.
+
+| Field | Purpose |
+|-------|---------|
+| Heading | Section heading (default: "About Our Firm") |
+| Image | A photo displayed alongside the text |
+| Mission Statement / Quote | A highlighted pull-quote or mission statement |
+| Body Text | Rich text body supporting headings, bold, italic, lists, and links |
+
+#### Call to Action
+A prominent prompt section, typically used to drive visitors to contact the firm or meet the team.
+
+| Field | Purpose |
+|-------|---------|
+| Heading | Section heading (default: "Get in Touch") |
+| Subtitle (large) | Large supporting text shown below the heading |
+| Body Text | Smaller body text |
+| Button Label | Text on the button (default: "Meet Our Team") |
+| Button URL | Where the button links to (default: `/attorneys`) |
+
+#### Text Block
+A simple heading + rich text block for general content.
+
+| Field | Purpose |
+|-------|---------|
+| Heading | Optional section heading |
+| Body | Rich text supporting headings, bold, italic, lists, and links |
+
+#### Team / Attorneys
+Displays a grid of attorney cards. Use this to feature specific attorneys on any page.
+
+| Field | Purpose |
+|-------|---------|
+| Section Heading | Heading shown above the attorney grid (default: "Our Team") |
+| Attorneys | Pick and order specific attorneys to display. Drag to reorder within this section |
+
+> Any attorney — including **Featured Only** attorneys — can be added to this section regardless of their category.
+
+#### Locations
+Displays a grid of office location cards.
+
+| Field | Purpose |
+|-------|---------|
+| Section Heading | Heading shown above the locations grid (default: "Our Locations") |
+| Office Locations | Pick and order the offices to display. Drag to reorder |
+
+#### Practice Areas
+Displays a grid of practice area cards.
+
+| Field | Purpose |
+|-------|---------|
+| Section Heading | Heading shown above the grid (default: "Practice Areas") |
+| Practice Areas | Pick and order the practice areas to display. Drag to reorder |
+
+#### News / Articles
+Automatically displays the most recent published news articles.
+
+| Field | Purpose |
+|-------|---------|
+| Section Heading | Heading shown above the articles (default: "Latest News") |
+| Number of Articles to Show | How many articles to display (1–20, default: 3) |
 
 ---
 

@@ -1,18 +1,18 @@
-import { defineConfig, type DocumentActionComponent } from 'sanity'
-import { structureTool } from 'sanity/structure'
-import { presentationTool } from 'sanity/presentation'
-import { markdownSchema } from 'sanity-plugin-markdown'
-import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list'
-import { schemaTypes } from './schemas'
-import { projectId, dataset, apiVersion } from './env'
-import { resolve } from './presentation/resolve'
-import { createAutoPublishSnapshotAction } from './actions/autoPublishSnapshotAction'
-import { SnapshotHistory } from './views/SnapshotHistory'
-import { GlobalSnapshotRestore } from './views/GlobalSnapshotRestore'
-import { ContentSnapshotManager } from './views/ContentSnapshotManager'
-import { UnpublishedChanges } from './views/UnpublishedChanges'
+import { defineConfig, type DocumentActionComponent } from 'sanity';
+import { structureTool } from 'sanity/structure';
+import { presentationTool } from 'sanity/presentation';
+import { markdownSchema } from 'sanity-plugin-markdown';
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
+import { schemaTypes } from './schemas';
+import { projectId, dataset, apiVersion } from './env';
+import { resolve } from './presentation/resolve';
+import { createAutoPublishSnapshotAction } from './actions/autoPublishSnapshotAction';
+import { SnapshotHistory } from './views/SnapshotHistory';
+import { GlobalSnapshotRestore } from './views/GlobalSnapshotRestore';
+import { ContentSnapshotManager } from './views/ContentSnapshotManager';
+import { UnpublishedChanges } from './views/UnpublishedChanges';
 
-const SNAPSHOT_EXCLUDED_TYPES = ['contentSnapshot', 'globalSnapshot']
+const SNAPSHOT_EXCLUDED_TYPES = ['contentSnapshot', 'globalSnapshot'];
 
 export default defineConfig({
   name: 'panza-maurer',
@@ -34,23 +34,11 @@ export default defineConfig({
               .title('Site Settings')
               .id('siteSettings')
               .child(
-                S.document().schemaType('siteSettings').documentId('siteSettings'),
+                S.document()
+                  .schemaType('siteSettings')
+                  .documentId('siteSettings'),
               ),
             S.divider(),
-            S.listItem()
-              .title('Pages')
-              .schemaType('page')
-              .child(
-                S.documentTypeList('page').child((documentId) =>
-                  S.document()
-                    .documentId(documentId)
-                    .schemaType('page')
-                    .views([
-                      S.view.form(),
-                      S.view.component(SnapshotHistory).title('Version History').id('version-history'),
-                    ]),
-                ),
-              ),
             S.divider(),
             S.listItem()
               .title('News Articles')
@@ -62,7 +50,10 @@ export default defineConfig({
                     .schemaType('newsArticle')
                     .views([
                       S.view.form(),
-                      S.view.component(SnapshotHistory).title('Version History').id('version-history'),
+                      S.view
+                        .component(SnapshotHistory)
+                        .title('Version History')
+                        .id('version-history'),
                     ]),
                 ),
               ),
@@ -99,11 +90,35 @@ export default defineConfig({
                     }),
                   ]),
               ),
-            orderableDocumentListDeskItem({ type: 'practiceArea', title: 'Practice Areas', S, context }),
+            orderableDocumentListDeskItem({
+              type: 'practiceArea',
+              title: 'Practice Areas',
+              S,
+              context,
+            }),
             S.listItem()
               .title('Locations')
               .schemaType('location')
               .child(S.documentTypeList('location').title('Locations')),
+            S.divider(),
+            S.listItem()
+              .title('Pages')
+              .schemaType('page')
+              .child(
+                S.documentTypeList('page').child((documentId) =>
+                  S.document()
+                    .documentId(documentId)
+                    .schemaType('page')
+                    .views([
+                      S.view.form(),
+                      S.view
+                        .component(SnapshotHistory)
+                        .title('Version History')
+                        .id('version-history'),
+                    ]),
+                ),
+              ),
+            S.divider(),
             S.divider(),
             S.listItem()
               .title('Unpublished Changes')
@@ -113,6 +128,7 @@ export default defineConfig({
                   .id('unpublished-changes')
                   .title('Unpublished Changes'),
               ),
+            S.divider(),
             S.divider(),
             S.listItem()
               .title('Developers')
@@ -160,12 +176,13 @@ export default defineConfig({
       prev: DocumentActionComponent[],
       context: { schemaType: string },
     ): DocumentActionComponent[] => {
-      if (SNAPSHOT_EXCLUDED_TYPES.includes(context.schemaType)) return prev
+      if (SNAPSHOT_EXCLUDED_TYPES.includes(context.schemaType)) return prev;
       return prev.map((action) =>
-        (action as DocumentActionComponent & { action?: string }).action === 'publish'
+        (action as DocumentActionComponent & { action?: string }).action ===
+        'publish'
           ? createAutoPublishSnapshotAction(action)
           : action,
-      )
+      );
     },
   },
-})
+});
