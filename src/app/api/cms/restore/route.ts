@@ -7,24 +7,24 @@ const SYSTEM_FIELDS = new Set(['_id', '_type', '_rev', '_createdAt', '_updatedAt
 function revalidateForType(type: string) {
   switch (type) {
     case 'page':
-      revalidateTag('pages')
+      revalidateTag('pages', {})
       revalidatePath('/', 'layout')
       break
     case 'newsArticle':
-      revalidateTag('news')
+      revalidateTag('news', {})
       revalidatePath('/news', 'layout')
       revalidatePath('/', 'layout')
       break
     case 'attorney':
-      revalidateTag('attorneys')
+      revalidateTag('attorneys', {})
       revalidatePath('/attorneys', 'layout')
       break
     case 'practiceArea':
-      revalidateTag('practiceAreas')
+      revalidateTag('practiceAreas', {})
       revalidatePath('/practice-areas', 'layout')
       break
     case 'location':
-      revalidateTag('locations')
+      revalidateTag('locations', {})
       revalidatePath('/locations', 'page')
       break
   }

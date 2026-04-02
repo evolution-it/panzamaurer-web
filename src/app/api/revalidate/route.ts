@@ -19,26 +19,26 @@ export async function POST(request: NextRequest) {
 
   switch (_type) {
     case 'attorney':
-      revalidateTag('attorneys')
+      revalidateTag('attorneys', {})
       revalidatePath('/attorneys', 'layout')
       break
     case 'location':
-      revalidateTag('locations')
+      revalidateTag('locations', {})
       revalidatePath('/locations', 'page')
       revalidatePath('/contact', 'page')
       revalidatePath('/', 'layout')
       break
     case 'newsArticle':
-      revalidateTag('news')
+      revalidateTag('news', {})
       revalidatePath('/news', 'layout')
       revalidatePath('/', 'layout')
       break
     case 'practiceArea':
-      revalidateTag('practiceAreas')
+      revalidateTag('practiceAreas', {})
       revalidatePath('/practice-areas', 'layout')
       break
     case 'page':
-      revalidateTag('pages')
+      revalidateTag('pages', {})
       revalidatePath('/', 'layout')
       revalidatePath('/locations', 'page')
       revalidatePath('/contact', 'page')
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       revalidatePath('/news', 'page')
       break
     case 'siteSettings':
-      revalidateTag('siteSettings')
+      revalidateTag('siteSettings', {})
       revalidatePath('/', 'layout')
       break
     default:
