@@ -32,3 +32,11 @@ export const PRACTICE_AREA_BY_SLUG_QUERY = groq`
 export const PRACTICE_AREA_SLUGS_QUERY = groq`
   *[_type == "practiceArea" && status == "published"].slug.current
 `
+
+export const NAV_PRACTICE_AREAS_QUERY = groq`
+  *[_type == "practiceArea" && status == "published" && showInNavDropdown == true] | order(orderRank asc, title asc) {
+    _id,
+    title,
+    slug
+  }
+`

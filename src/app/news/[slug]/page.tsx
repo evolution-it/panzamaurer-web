@@ -29,7 +29,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const article: NewsArticle | null = await client.fetch(NEWS_ARTICLE_BY_SLUG_QUERY, { slug })
+  const article: NewsArticle | null = await client.fetch(NEWS_ARTICLE_BY_SLUG_QUERY, { slug }, {
+    next: { tags: ['news'] },
+  })
   return {
     title: article ? `${article.title} | Panza Maurer` : 'News | Panza Maurer',
   }
