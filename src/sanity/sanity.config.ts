@@ -68,17 +68,36 @@ export default defineConfig({
               ),
             S.listItem()
               .title('Attorneys')
-              .schemaType('attorney')
+              .id('attorneys')
               .child(
-                S.documentTypeList('attorney').child((documentId) =>
-                  S.document()
-                    .documentId(documentId)
-                    .schemaType('attorney')
-                    .views([
-                      S.view.form(),
-                      S.view.component(SnapshotHistory).title('Version History').id('version-history'),
-                    ]),
-                ),
+                S.list()
+                  .title('Attorneys')
+                  .items([
+                    orderableDocumentListDeskItem({
+                      type: 'attorney',
+                      title: 'Our Attorneys',
+                      id: 'ourAttorneys',
+                      filter: 'type == "Our Attorneys"',
+                      S,
+                      context,
+                    }),
+                    orderableDocumentListDeskItem({
+                      type: 'attorney',
+                      title: 'Of Counsel',
+                      id: 'ofCounsel',
+                      filter: 'type == "Of Counsel"',
+                      S,
+                      context,
+                    }),
+                    orderableDocumentListDeskItem({
+                      type: 'attorney',
+                      title: 'Featured Only',
+                      id: 'featuredOnly',
+                      filter: 'type == "Featured Only"',
+                      S,
+                      context,
+                    }),
+                  ]),
               ),
             orderableDocumentListDeskItem({ type: 'practiceArea', title: 'Practice Areas', S, context }),
             S.listItem()
