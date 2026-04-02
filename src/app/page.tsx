@@ -127,7 +127,6 @@ export default async function Home() {
           imageUrl={aboutImageUrl}
         />
         <PracticeAreas areas={practiceAreasSection?.practiceAreas ?? undefined} />
-        <Team teamMembers={teamMembers} />
         <News count={newsCount} />
         <Locations preloadedLocations={preloadedLocations} />
       </main>
