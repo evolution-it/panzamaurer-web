@@ -19,7 +19,7 @@ type NewsCard = {
   date: string
   excerpt: string
   categories: string[]
-  listingImages?: { asset: { _id: string; url: string } }[]
+  listingImages?: { asset: { _id: string; url: string } } | null
 }
 
 export default async function NewsArchivePage({
@@ -51,7 +51,7 @@ export default async function NewsArchivePage({
           <div className='mx-auto max-w-[1440px] px-8 py-12 lg:px-28'>
             <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
               {posts.map((post) => {
-                const listingImg = post.listingImages?.[0]?.asset?.url ?? null
+                const listingImg = post.listingImages?.asset?.url ?? null
                 return (
                   <Link
                     key={post._id}

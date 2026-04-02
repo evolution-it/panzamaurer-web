@@ -26,6 +26,13 @@ export const practiceArea = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'summary',
+      title: 'Summary',
+      description: 'Brief summary displayed below the title on the All Practice Areas page',
+      type: 'string',
+      initialValue: (doc: { heading?: string }) => doc?.heading ?? '',
+    }),
+    defineField({
       name: 'content',
       title: 'Content',
       type: 'array',

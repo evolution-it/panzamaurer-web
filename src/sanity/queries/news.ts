@@ -7,7 +7,7 @@ const NEWS_CARD_FIELDS = groq`
   date,
   excerpt,
   categories,
-  listingImages[] { asset-> }
+  listingImages { asset-> }
 `
 
 export const LATEST_NEWS_QUERY = groq`
@@ -45,7 +45,7 @@ export const NEWS_ARTICLE_BY_SLUG_QUERY = groq`
     content,
     categories,
     images[] { asset-> },
-    listingImages[] { asset-> },
+    listingImages { asset-> },
     status
   }
 `
