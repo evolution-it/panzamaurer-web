@@ -1,4 +1,4 @@
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 import { client, getWriteClient } from '@/sanity/client'
 
@@ -7,18 +7,24 @@ const SYSTEM_FIELDS = new Set(['_id', '_type', '_rev', '_createdAt', '_updatedAt
 function revalidateForType(type: string) {
   switch (type) {
     case 'page':
+      revalidateTag('pages')
       revalidatePath('/', 'layout')
       break
     case 'newsArticle':
+      revalidateTag('news')
       revalidatePath('/news', 'layout')
+      revalidatePath('/', 'layout')
       break
     case 'attorney':
+      revalidateTag('attorneys')
       revalidatePath('/attorneys', 'layout')
       break
     case 'practiceArea':
+      revalidateTag('practiceAreas')
       revalidatePath('/practice-areas', 'layout')
       break
     case 'location':
+      revalidateTag('locations')
       revalidatePath('/locations', 'page')
       break
   }
