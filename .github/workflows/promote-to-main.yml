@@ -33,7 +33,21 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Check for new commits to promote
+        id: diff_check
+        run: |
+          git fetch origin main
+          AHEAD=$(git rev-list --count origin/main..origin/staging)
+          echo "Commits ahead of main: $AHEAD"
+          if [ "$AHEAD" -eq 0 ]; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "⚠️ staging is already up to date with main — nothing to promote."
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Calculate next version
+        if: steps.diff_check.outputs.has_changes == 'true'
         id: version
         run: |
           git fetch --tags
@@ -59,6 +73,7 @@ jobs:
           echo "New tag: $NEW_TAG"
 
       - name: Create PR from staging to main
+        if: steps.diff_check.outputs.has_changes == 'true'
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -73,6 +88,7 @@ jobs:
           echo "Created PR: $PR_URL"
 
       - name: Merge PR into main
+        if: steps.diff_check.outputs.has_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -82,6 +98,7 @@ jobs:
             --repo ${{ github.repository }}
 
       - name: Create and push version tag
+        if: steps.diff_check.outputs.has_changes == 'true'
         run: |
           git fetch origin main
           git checkout main
@@ -90,6 +107,7 @@ jobs:
           git push origin ${{ steps.version.outputs.new_tag }}
 
       - name: Create GitHub Release
+        if: steps.diff_check.outputs.has_changes == 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.new_tag }}
