@@ -87,7 +87,7 @@ export default async function Footer() {
             ))}
           </div>
 
-          <p className='font-[family-name:var(--font-noto)] text-sm font-normal text-gray-400'>
+          <p className='font-[family-name:var(--font-noto)] pt-8 text-xs font-normal text-gray-400'>
             Copyright © Panza, Maurer &amp; Maynard 2026 All Rights Reserved.
           </p>
         </div>
