@@ -18,7 +18,7 @@ type NewsArticle = {
   content: string
   categories: string[]
   images?: { asset: { _id: string; url: string } }[]
-  listingImages?: { asset: { _id: string; url: string } }[]
+  listingImages?: { asset: { _id: string; url: string } } | null
   status: string
 }
 

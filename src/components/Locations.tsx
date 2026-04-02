@@ -37,7 +37,7 @@ export default async function Locations({
           </div>
 
           <div className='flex w-full flex-col gap-0.5 lg:flex-row'>
-            {locations.map((location, index) => {
+            {locations.map((location) => {
               const imgSrc = location.image
                 ? urlFor(location.image).width(800).height(500).url()
                 : null
@@ -45,9 +45,7 @@ export default async function Locations({
               return (
                 <div
                   key={location._id}
-                  className={`group relative h-[250px] w-full overflow-hidden sm:h-[400px] lg:h-[500px] ${
-                    index === 0 ? 'lg:flex-1' : 'lg:w-[404px]'
-                  }`}
+                  className={`group relative h-[250px] w-full overflow-hidden sm:h-[400px] lg:h-[500px] lg:flex-1`}
                 >
                   {imgSrc ? (
                     <Image

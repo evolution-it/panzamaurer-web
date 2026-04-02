@@ -6,6 +6,7 @@ export const PRACTICE_AREAS_LIST_QUERY = groq`
     title,
     slug,
     heading,
+    summary,
     status
   }
 `

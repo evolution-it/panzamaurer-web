@@ -53,10 +53,10 @@ export const newsArticle = defineType({
     }),
     defineField({
       name: 'listingImages',
-      title: 'Listing / Thumbnail Images',
-      description: 'Images shown on the news listing card',
-      type: 'array',
-      of: [defineArrayMember({ type: 'image', options: { hotspot: true } })],
+      title: 'Listing / Thumbnail Image',
+      description: 'Image shown on the news listing card',
+      type: 'image',
+      options: { hotspot: true },
     }),
     defineField({
       name: 'categories',
@@ -82,7 +82,7 @@ export const newsArticle = defineType({
     }),
   ],
   preview: {
-    select: { title: 'title', subtitle: 'date', media: 'listingImages.0' },
+    select: { title: 'title', subtitle: 'date', media: 'listingImages' },
   },
   orderings: [
     {

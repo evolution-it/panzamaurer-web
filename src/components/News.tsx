@@ -9,7 +9,7 @@ type NewsItem = {
   slug: { current: string }
   date: string
   excerpt: string
-  listingImages?: { asset: { _id: string; url: string } }[]
+  listingImages?: { asset: { _id: string; url: string } } | null
 }
 
 function NewsCard({ title, date, excerpt, slug }: NewsItem) {

@@ -15,6 +15,7 @@ type PracticeArea = {
   title: string
   slug: { current: string }
   heading?: string
+  summary?: string
   status: string
 }
 
@@ -46,8 +47,8 @@ export default async function PracticeAreasPage() {
                   <h3 className='font-[family-name:var(--font-hanken)] text-lg font-semibold text-gray-950'>
                     {area.title}
                   </h3>
-                  {area.heading && (
-                    <p className='text-sm leading-6 text-gray-600'>{area.heading}</p>
+                  {(area.summary || area.heading) && (
+                    <p className='text-sm leading-6 text-gray-600'>{area.summary || area.heading}</p>
                   )}
                   <Link
                     href={`/practice-areas/${area.slug.current}`}
