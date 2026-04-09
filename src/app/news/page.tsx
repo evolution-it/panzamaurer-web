@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { LATEST_NEWS_QUERY } from '@/sanity/queries/news'
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 
 export const metadata = {
   title: 'News | Panza Maurer',
@@ -18,7 +19,7 @@ type NewsCard = {
   date: string
   excerpt: string
   categories: string[]
-  listingImages?: { asset: { _id: string; url: string } } | null
+  listingImages?: SanityImageSource | null
 }
 
 export default async function NewsPage() {
@@ -36,7 +37,9 @@ export default async function NewsPage() {
           <div className='mx-auto max-w-[1440px] px-8 py-12 lg:px-28'>
             <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
               {posts.map((post) => {
-                const listingImg = post.listingImages?.asset?.url ?? null
+                const listingImg = post.listingImages
+                  ? urlFor(post.listingImages).width(600).height(400).url()
+                  : null
                 return (
                   <Link
                     key={post._id}
@@ -49,6 +52,7 @@ export default async function NewsPage() {
                           src={listingImg}
                           alt={post.title}
                           fill
+                          sizes='(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw'
                           className='object-cover object-top transition-transform duration-300 group-hover:scale-105'
                         />
                       </div>
