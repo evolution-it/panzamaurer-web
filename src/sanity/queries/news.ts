@@ -28,8 +28,12 @@ export const HOME_NEWS_QUERY = groq`
   }
 `
 
+export const ARCHIVE_NEWS_COUNT_QUERY = groq`
+  count(*[_type == "newsArticle" && status in ["published", "archived"]])
+`
+
 export const ARCHIVE_NEWS_QUERY = groq`
-  *[_type == "newsArticle" && status in ["published", "archived"]] | order(date desc) {
+  *[_type == "newsArticle" && status in ["published", "archived"]] | order(date desc) [$from...$to] {
     ${NEWS_CARD_FIELDS}
   }
 `

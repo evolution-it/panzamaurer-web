@@ -67,6 +67,7 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
                 <div key={item.label} className="group relative">
                   <Link
                     href={item.href}
+                    prefetch={false}
                     className="flex items-center gap-1 font-[family-name:var(--font-inter)] text-[16px] font-semibold leading-[1.5] text-slate-700 transition-colors hover:text-slate-900"
                   >
                     {item.label}
@@ -85,6 +86,7 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
                       <Link
                         key={sub.label}
                         href={sub.slug ? `/practice-areas/${sub.slug}` : "/practice-areas"}
+                        prefetch={false}
                         className="block px-4 py-2 font-[family-name:var(--font-inter)] text-sm text-slate-600 transition-colors hover:bg-gray-50 hover:text-slate-900"
                       >
                         {sub.label}
@@ -96,6 +98,7 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
                 <Link
                   key={item.label}
                   href={item.href}
+                  prefetch={false}
                   className="flex items-center gap-1 font-[family-name:var(--font-inter)] text-[16px] font-semibold leading-[1.5] text-slate-700 transition-colors hover:text-slate-900"
                 >
                   {item.label}
@@ -152,6 +155,7 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
                         <Link
                           key={sub.label}
                           href={sub.slug ? `/practice-areas/${sub.slug}` : "/practice-areas"}
+                          prefetch={false}
                           className="block py-2 font-[family-name:var(--font-inter)] text-sm text-slate-600"
                           onClick={() => setMobileOpen(false)}
                         >
@@ -165,6 +169,7 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
                 <Link
                   key={item.label}
                   href={item.href}
+                  prefetch={false}
                   className="block py-3 font-[family-name:var(--font-inter)] text-base font-semibold text-slate-700"
                   onClick={() => setMobileOpen(false)}
                 >
