@@ -8,7 +8,7 @@ import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { NEWS_ARTICLE_BY_SLUG_QUERY, NEWS_SLUGS_QUERY } from '@/sanity/queries/news'
 import { notFound } from 'next/navigation'
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { SanityImageSource } from '@sanity/image-url'
 
 type NewsArticle = {
   _id: string

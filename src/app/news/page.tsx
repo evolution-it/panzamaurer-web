@@ -6,7 +6,7 @@ import Footer from '@/components/Footer'
 import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { LATEST_NEWS_QUERY } from '@/sanity/queries/news'
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { SanityImageSource } from '@sanity/image-url'
 
 export const metadata = {
   title: 'News | Panza Maurer',
