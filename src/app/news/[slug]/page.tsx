@@ -5,8 +5,10 @@ import Footer from '@/components/Footer'
 import ReactMarkdown from 'react-markdown'
 import { client } from '@/sanity/client'
 import { getDraftModeClient } from '@/sanity/draftMode'
+import { urlFor } from '@/sanity/image'
 import { NEWS_ARTICLE_BY_SLUG_QUERY, NEWS_SLUGS_QUERY } from '@/sanity/queries/news'
 import { notFound } from 'next/navigation'
+import type { SanityImageSource } from '@sanity/image-url'
 
 type NewsArticle = {
   _id: string
@@ -17,8 +19,8 @@ type NewsArticle = {
   excerpt: string
   content: string
   categories: string[]
-  images?: { asset: { _id: string; url: string } }[]
-  listingImages?: { asset: { _id: string; url: string } } | null
+  images?: SanityImageSource[]
+  listingImages?: SanityImageSource | null
   status: string
 }
 
@@ -55,7 +57,7 @@ export default async function NewsArticlePage({
     notFound()
   }
 
-  const articleImages = post.images?.map((img) => img.asset.url).filter(Boolean) ?? []
+  const articleImages = post.images?.map((img) => urlFor(img).width(700).auto('format').url()) ?? []
 
   return (
     <div className='flex min-h-screen flex-col items-center'>
@@ -109,9 +111,9 @@ export default async function NewsArticlePage({
                       key={i}
                       src={src}
                       alt={`${post.title} image ${i + 1}`}
-                      width={0}
-                      height={0}
-                      sizes='100vw'
+                      width={700}
+                      height={467}
+                      sizes='(max-width: 768px) 100vw, 700px'
                       className='h-auto w-full rounded-lg'
                     />
                   ))}
