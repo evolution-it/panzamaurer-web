@@ -4,7 +4,9 @@ import Navbar from '@/components/Navbar'
 import PageHero from '@/components/PageHero'
 import Footer from '@/components/Footer'
 import { getDraftModeClient } from '@/sanity/draftMode'
-import { ARCHIVE_NEWS_QUERY } from '@/sanity/queries/news'
+import { ARCHIVE_NEWS_QUERY, ARCHIVE_NEWS_COUNT_QUERY } from '@/sanity/queries/news'
+import { urlFor } from '@/sanity/image'
+import type { SanityImageSource } from '@sanity/image-url'
 
 export const metadata = {
   title: 'News Archive | Panza Maurer',
@@ -19,7 +21,7 @@ type NewsCard = {
   date: string
   excerpt: string
   categories: string[]
-  listingImages?: { asset: { _id: string; url: string } } | null
+  listingImages?: SanityImageSource | null
 }
 
 export default async function NewsArchivePage({
@@ -30,16 +32,19 @@ export default async function NewsArchivePage({
   const { page } = await searchParams
   const { sanityClient, cacheTags } = await getDraftModeClient()
 
-  const allArchivePosts: NewsCard[] = await sanityClient.fetch(ARCHIVE_NEWS_QUERY, {}, cacheTags(['news']))
-
   const currentPage = Math.max(1, parseInt(page ?? '1', 10) || 1)
-  const totalPages = Math.ceil(allArchivePosts.length / PAGE_SIZE)
-  const clampedPage = Math.min(currentPage, Math.max(1, totalPages))
 
-  const posts = allArchivePosts.slice(
-    (clampedPage - 1) * PAGE_SIZE,
-    clampedPage * PAGE_SIZE,
-  )
+  const [totalCount, posts] = await Promise.all([
+    sanityClient.fetch<number>(ARCHIVE_NEWS_COUNT_QUERY, {}, cacheTags(['news'])),
+    sanityClient.fetch<NewsCard[]>(
+      ARCHIVE_NEWS_QUERY,
+      { from: (currentPage - 1) * PAGE_SIZE, to: currentPage * PAGE_SIZE },
+      cacheTags(['news']),
+    ),
+  ])
+
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE)
+  const clampedPage = Math.min(currentPage, Math.max(1, totalPages))
 
   return (
     <div className='flex min-h-screen flex-col items-center'>
@@ -51,11 +56,14 @@ export default async function NewsArchivePage({
           <div className='mx-auto max-w-[1440px] px-8 py-12 lg:px-28'>
             <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
               {posts.map((post) => {
-                const listingImg = post.listingImages?.asset?.url ?? null
+                const listingImg = post.listingImages
+                  ? urlFor(post.listingImages).width(600).height(400).url()
+                  : null
                 return (
                   <Link
                     key={post._id}
                     href={`/news/${post.slug.current}`}
+                    prefetch={false}
                     className='group flex flex-col gap-4 overflow-hidden rounded-xl border border-gray-200 transition-shadow hover:shadow-md'
                   >
                     {listingImg && (
@@ -64,6 +72,7 @@ export default async function NewsArchivePage({
                           src={listingImg}
                           alt={post.title}
                           fill
+                          sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                           className='object-cover object-top transition-transform duration-300 group-hover:scale-105'
                         />
                       </div>

@@ -33,6 +33,7 @@ function NewsCard({ title, date, excerpt, slug }: NewsItem) {
         </p>
         <Link
           href={`/news/${slug.current}`}
+          prefetch={false}
           className='mt-2 inline-flex items-center gap-2 font-[family-name:var(--font-noto)] text-lg font-medium leading-7 text-red-500 transition-colors hover:text-red-400'
         >
           Read
