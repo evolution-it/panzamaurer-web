@@ -54,7 +54,13 @@ function AttorneyCard({ attorney }: { attorney: AttorneyListItem }) {
           />
         ) : (
           <div className='flex h-full items-center justify-center text-slate-300'>
-            <svg className='h-16 w-16' fill='currentColor' viewBox='0 0 24 24'>
+            <svg
+              className='h-16 w-16'
+              fill='currentColor'
+              viewBox='0 0 24 24'
+              aria-hidden='true'
+              focusable='false'
+            >
               <path d='M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z' />
             </svg>
           </div>
@@ -154,7 +160,7 @@ export default async function AttorneysPage() {
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
         <PageHero title='Our Attorneys' />
 
         {sections.map((section, index) => (

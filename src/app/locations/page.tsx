@@ -49,7 +49,7 @@ export default async function LocationsPage() {
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
         <PageHero title='Our Locations' />
 
         <section className='bg-white'>

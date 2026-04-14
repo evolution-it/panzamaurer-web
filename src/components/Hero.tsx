@@ -20,6 +20,7 @@ export default function Hero({
 }) {
   const displayVideos = videos && videos.length > 0 ? videos : FALLBACK_VIDEOS;
   const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const displayHeading = heading ?? 'We Know Florida';
@@ -28,6 +29,10 @@ export default function Hero({
     'Representing businesses, regulated industries and institutions for more than 50 years.';
 
   useEffect(() => {
+    // Respect user's reduced-motion preference — skip auto-rotation
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion || paused) return;
+
     const interval = setInterval(() => {
       setActiveIndex((prev) => {
         const next = (prev + 1) % displayVideos.length;
@@ -41,7 +46,7 @@ export default function Hero({
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [displayVideos.length]);
+  }, [displayVideos.length, paused]);
 
   return (
     <section className='relative flex h-[803px] w-full items-end justify-center overflow-hidden bg-white'>
@@ -55,6 +60,8 @@ export default function Hero({
           muted
           loop
           playsInline
+          aria-hidden="true"
+          tabIndex={-1}
           className='absolute inset-0 h-full w-full object-cover transition-opacity duration-1000'
           style={{ opacity: activeIndex === i ? 1 : 0 }}
         >
@@ -66,6 +73,7 @@ export default function Hero({
       ))}
 
       <div
+        aria-hidden="true"
         className='absolute inset-0'
         style={{
           background:
@@ -73,6 +81,7 @@ export default function Hero({
         }}
       />
       <div
+        aria-hidden="true"
         className='absolute inset-0'
         style={{
           background:
@@ -93,6 +102,37 @@ export default function Hero({
           </div>
         </div>
       </div>
+
+      {/* Pause/play control for background slideshow (WCAG 2.2.2) */}
+      <button
+        onClick={() => setPaused((p) => !p)}
+        aria-label={paused ? 'Play background slideshow' : 'Pause background slideshow'}
+        className='absolute bottom-6 right-6 z-20 rounded-full bg-black/40 p-2 text-white transition-colors hover:bg-black/60 focus-visible:outline-2 focus-visible:outline-white'
+      >
+        {paused ? (
+          /* Play icon */
+          <svg
+            className='h-5 w-5'
+            viewBox='0 0 24 24'
+            fill='currentColor'
+            aria-hidden='true'
+            focusable='false'
+          >
+            <path d='M8 5v14l11-7z' />
+          </svg>
+        ) : (
+          /* Pause icon */
+          <svg
+            className='h-5 w-5'
+            viewBox='0 0 24 24'
+            fill='currentColor'
+            aria-hidden='true'
+            focusable='false'
+          >
+            <path d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' />
+          </svg>
+        )}
+      </button>
     </section>
   );
 }

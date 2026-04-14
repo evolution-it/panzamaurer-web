@@ -48,7 +48,7 @@ export default async function ContactPage() {
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
         <PageHero
           title='Contact Us'
           subtitle='Every Second Counts! When you need serious counsel every second counts. Panza Maurer is ready to navigate a successful result. Our experienced strategic approach provides the foundation for every case we engage in. Please do not hesitate to contact us.'
@@ -96,6 +96,7 @@ export default async function ContactPage() {
                       {office.phone && (
                         <a
                           href={`tel:${office.phone.replace(/[^\d]/g, '')}`}
+                          aria-label={`Call ${office.name}`}
                           className='mt-2 inline-flex w-fit items-center justify-center rounded-lg bg-primary-red px-5 py-2.5 text-base font-semibold text-white transition-colors hover:bg-red-800'
                         >
                           Call Now

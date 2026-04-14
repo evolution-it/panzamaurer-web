@@ -30,7 +30,7 @@ export default async function NewsPage() {
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full pt-[109px]'>
+      <main id='main-content' className='w-full pt-[109px]'>
         <PageHero title='News' subtitle='Recent Firm News & Events' />
 
         <section className='bg-white'>
@@ -58,13 +58,16 @@ export default async function NewsPage() {
                       </div>
                     )}
                     <div className='flex flex-1 flex-col gap-3 p-6'>
-                      <p className='text-sm font-medium text-gray-400'>
+                      <time
+                        dateTime={post.date}
+                        className='text-sm font-medium text-gray-400'
+                      >
                         {new Date(post.date).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',
                         })}
-                      </p>
+                      </time>
                       <h3 className='font-[family-name:var(--font-hanken)] text-lg font-semibold leading-snug text-gray-950'>
                         {post.title}
                       </h3>

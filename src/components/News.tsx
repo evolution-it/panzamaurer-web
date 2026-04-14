@@ -34,10 +34,11 @@ function NewsCard({ title, date, excerpt, slug }: NewsItem) {
         <Link
           href={`/news/${slug.current}`}
           prefetch={false}
+          aria-label={`Read: ${title}`}
           className='mt-2 inline-flex items-center gap-2 font-[family-name:var(--font-noto)] text-lg font-medium leading-7 text-red-500 transition-colors hover:text-red-400'
         >
           Read
-          <Image src='/images/arrow-up-right.svg' alt='' width={16} height={16} />
+          <Image src='/images/arrow-up-right.svg' alt='' width={16} height={16} aria-hidden='true' />
         </Link>
       </div>
     </div>
