@@ -114,7 +114,7 @@ export default async function Home() {
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full'>
+      <main id='main-content' className='w-full'>
         <Hero
           heading={heroSection?.heading ?? undefined}
           subtitle={heroSection?.subtitle ?? undefined}

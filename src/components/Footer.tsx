@@ -78,9 +78,12 @@ export default async function Footer() {
                     </p>
                   )}
                   {loc.phone && (
-                    <p className='mt-1 font-[family-name:var(--font-noto)] text-base font-normal leading-[26px] text-gray-300'>
+                    <a
+                      href={`tel:${loc.phone.replace(/[^\d+]/g, '')}`}
+                      className='mt-1 font-[family-name:var(--font-noto)] text-base font-normal leading-[26px] text-gray-300 hover:text-white transition-colors'
+                    >
                       {loc.phone}
-                    </p>
+                    </a>
                   )}
                 </div>
               </div>

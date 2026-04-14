@@ -62,7 +62,7 @@ export default async function NewsArticlePage({
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
         {/* Hero */}
         <section
           className='relative w-full rounded-br-[30px]'
@@ -88,13 +88,13 @@ export default async function NewsArticlePage({
               <h1 className='mb-3 mt-2 max-w-[700px] font-[family-name:var(--font-hanken)] text-[36px] font-semibold leading-[1.3] tracking-[-0.36px] text-slate-600 md:text-[44px]'>
                 {post.title}
               </h1>
-              <p className='mb-6 text-sm font-medium text-gray-400'>
+              <time dateTime={post.date} className='mb-6 text-sm font-medium text-gray-400'>
                 {new Date(post.date).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 })}
-              </p>
+              </time>
             </div>
           </div>
         </section>
@@ -168,8 +168,8 @@ export default async function NewsArticlePage({
                   href='/news'
                   className='group inline-flex items-center gap-3 text-sm font-semibold text-gray-500 transition-colors hover:text-primary-red'
                 >
-                  <span className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 transition-colors group-hover:border-primary-red group-hover:text-primary-red'>
-                    <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                  <span className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 transition-colors group-hover:border-primary-red group-hover:text-primary-red' aria-hidden='true'>
+                    <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2} aria-hidden='true' focusable='false'>
                       <path strokeLinecap='round' strokeLinejoin='round' d='M19 12H5M12 5l-7 7 7 7' />
                     </svg>
                   </span>
@@ -180,8 +180,8 @@ export default async function NewsArticlePage({
                   className='group inline-flex items-center gap-3 text-sm font-semibold text-gray-500 transition-colors hover:text-primary-red'
                 >
                   News Archive
-                  <span className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 transition-colors group-hover:border-primary-red group-hover:text-primary-red'>
-                    <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                  <span className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 transition-colors group-hover:border-primary-red group-hover:text-primary-red' aria-hidden='true'>
+                    <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2} aria-hidden='true' focusable='false'>
                       <path strokeLinecap='round' strokeLinejoin='round' d='M5 12h14M12 5l7 7-7 7' />
                     </svg>
                   </span>

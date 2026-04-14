@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type NavLink = {
   label: string;
@@ -24,16 +24,53 @@ type Props = {
 export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [practiceAreasOpen, setPracticeAreasOpen] = useState(false);
+  const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
+  const desktopDropdownRef = useRef<HTMLDivElement>(null);
+  const desktopTriggerRef = useRef<HTMLButtonElement>(null);
+
+  // Close desktop dropdown on outside click or Escape
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setDesktopDropdownOpen(false);
+        setMobileOpen(false);
+        setPracticeAreasOpen(false);
+        desktopTriggerRef.current?.focus();
+      }
+    }
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        desktopDropdownRef.current &&
+        !desktopDropdownRef.current.contains(e.target as Node)
+      ) {
+        setDesktopDropdownOpen(false);
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50">
+    <nav className="fixed top-0 left-0 right-0 z-50" aria-label="Main navigation">
       {/* Mobile Phone Bar */}
       <div className="flex items-center justify-center bg-primary-dark px-4 py-3 lg:hidden">
         <a
           href={`tel:${contactPhone.replace(/[^\d+]/g, '')}`}
           className="flex items-center gap-3 font-[family-name:var(--font-inter)] text-base font-medium tracking-[2px] text-white"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+            aria-hidden="true"
+            focusable="false"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
           {contactPhone}
@@ -49,7 +86,7 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
       >
         <div className="mx-auto flex max-w-[1280px] items-center justify-between px-4 py-7">
           {/* Spacer to center logo on mobile */}
-          <div className="w-8 lg:hidden" />
+          <div className="w-8 lg:hidden" aria-hidden="true" />
           <Link href="/" className="lg:mr-auto">
             <Image
               src="/images/logo.svg"
@@ -61,48 +98,80 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden items-center gap-5 lg:flex">
+          <div className="hidden items-center gap-5 lg:flex" role="list">
             {navLinks.map((item) =>
               item.hasDropdown ? (
-                <div key={item.label} className="group relative">
+                <div
+                  key={item.label}
+                  className="relative"
+                  ref={desktopDropdownRef}
+                  role="listitem"
+                >
+                  <button
+                    ref={desktopTriggerRef}
+                    id="practice-areas-trigger"
+                    aria-haspopup="true"
+                    aria-expanded={desktopDropdownOpen}
+                    aria-controls="practice-areas-menu"
+                    onClick={() => setDesktopDropdownOpen((prev) => !prev)}
+                    onMouseEnter={() => setDesktopDropdownOpen(true)}
+                    className="flex items-center gap-1 font-[family-name:var(--font-inter)] text-[16px] font-semibold leading-[1.5] text-slate-700 transition-colors hover:text-slate-900"
+                  >
+                    {item.label}
+                    <svg
+                      className={`h-4 w-4 text-slate-500 transition-transform ${desktopDropdownOpen ? "rotate-180" : ""}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {desktopDropdownOpen && (
+                    <div
+                      id="practice-areas-menu"
+                      role="menu"
+                      aria-labelledby="practice-areas-trigger"
+                      className="absolute left-0 top-full z-50 w-[280px] rounded-lg border border-gray-200 bg-white py-2 shadow-lg"
+                    >
+                      <Link
+                        href={item.href}
+                        prefetch={false}
+                        role="menuitem"
+                        className="block px-4 py-2 font-[family-name:var(--font-inter)] text-sm font-semibold text-slate-700 transition-colors hover:bg-gray-50 hover:text-slate-900"
+                        onClick={() => setDesktopDropdownOpen(false)}
+                      >
+                        All Practice Areas
+                      </Link>
+                      <div role="separator" className="my-1 border-t border-gray-100" />
+                      {practiceAreaLinks.map((sub) => (
+                        <Link
+                          key={sub.label}
+                          href={sub.slug ? `/practice-areas/${sub.slug}` : "/practice-areas"}
+                          prefetch={false}
+                          role="menuitem"
+                          className="block px-4 py-2 font-[family-name:var(--font-inter)] text-sm text-slate-600 transition-colors hover:bg-gray-50 hover:text-slate-900"
+                          onClick={() => setDesktopDropdownOpen(false)}
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div key={item.label} role="listitem">
                   <Link
                     href={item.href}
                     prefetch={false}
                     className="flex items-center gap-1 font-[family-name:var(--font-inter)] text-[16px] font-semibold leading-[1.5] text-slate-700 transition-colors hover:text-slate-900"
                   >
                     {item.label}
-                    <svg
-                      className="h-4 w-4 text-slate-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
                   </Link>
-                  <div className="invisible absolute left-0 top-full z-50 w-[280px] rounded-lg border border-gray-200 bg-white py-2 shadow-lg opacity-0 transition-all group-hover:visible group-hover:opacity-100">
-                    {practiceAreaLinks.map((sub) => (
-                      <Link
-                        key={sub.label}
-                        href={sub.slug ? `/practice-areas/${sub.slug}` : "/practice-areas"}
-                        prefetch={false}
-                        className="block px-4 py-2 font-[family-name:var(--font-inter)] text-sm text-slate-600 transition-colors hover:bg-gray-50 hover:text-slate-900"
-                      >
-                        {sub.label}
-                      </Link>
-                    ))}
-                  </div>
                 </div>
-              ) : (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  prefetch={false}
-                  className="flex items-center gap-1 font-[family-name:var(--font-inter)] text-[16px] font-semibold leading-[1.5] text-slate-700 transition-colors hover:text-slate-900"
-                >
-                  {item.label}
-                </Link>
               )
             )}
           </div>
@@ -111,13 +180,17 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
           <button
             className="lg:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
           >
             <svg
               className="h-8 w-8 text-gray-900"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
+              focusable="false"
             >
               {mobileOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -130,13 +203,18 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="max-h-[calc(100svh-145px)] overflow-y-auto border-t border-gray-200 px-8 pb-6 lg:hidden">
+          <div
+            id="mobile-menu"
+            className="max-h-[calc(100svh-145px)] overflow-y-auto border-t border-gray-200 px-8 pb-6 lg:hidden"
+          >
             {navLinks.map((item) =>
               item.hasDropdown ? (
                 <div key={item.label}>
                   <button
                     className="flex w-full items-center justify-between py-3 font-[family-name:var(--font-inter)] text-base font-semibold text-slate-700"
                     onClick={() => setPracticeAreasOpen(!practiceAreasOpen)}
+                    aria-expanded={practiceAreasOpen}
+                    aria-controls="mobile-practice-areas"
                   >
                     {item.label}
                     <svg
@@ -145,12 +223,22 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                       strokeWidth={2}
+                      aria-hidden="true"
+                      focusable="false"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
                   {practiceAreasOpen && (
-                    <div className="pb-2 pl-4">
+                    <div id="mobile-practice-areas" className="pb-2 pl-4">
+                      <Link
+                        href={item.href}
+                        prefetch={false}
+                        className="block py-2 font-[family-name:var(--font-inter)] text-sm font-semibold text-slate-700"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        All Practice Areas
+                      </Link>
                       {practiceAreaLinks.map((sub) => (
                         <Link
                           key={sub.label}

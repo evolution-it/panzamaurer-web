@@ -43,23 +43,28 @@ export default function Team({ teamMembers }: { teamMembers: TeamMember[] }) {
             <button
               onClick={prev}
               disabled={currentIndex === 0}
+              aria-label='Previous attorneys'
+              aria-disabled={currentIndex === 0}
               className='absolute -left-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white p-4 shadow-lg transition-opacity hover:bg-gray-50 disabled:opacity-30 lg:flex'
             >
-              <Image src='/images/arrow-left.svg' alt='Previous' width={32} height={32} />
+              <Image src='/images/arrow-left.svg' alt='' width={32} height={32} aria-hidden='true' />
             </button>
 
             {/* Right Arrow */}
             <button
               onClick={next}
               disabled={currentIndex >= maxIndex}
+              aria-label='Next attorneys'
+              aria-disabled={currentIndex >= maxIndex}
               className='absolute -right-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white p-4 shadow-lg transition-opacity hover:bg-gray-50 disabled:opacity-30 lg:flex'
             >
               <Image
                 src='/images/arrow-left.svg'
-                alt='Next'
+                alt=''
                 width={32}
                 height={32}
                 className='rotate-180'
+                aria-hidden='true'
               />
             </button>
 
@@ -92,9 +97,9 @@ export default function Team({ teamMembers }: { teamMembers: TeamMember[] }) {
                   {/* Name card */}
                   <div className='absolute inset-x-0 bottom-0 px-6 pb-8 pt-6'>
                     <div className='rounded-2xl bg-white/10 px-6 py-5 backdrop-blur-[12px]'>
-                      <h5 className='font-[family-name:var(--font-hanken)] text-2xl font-bold leading-10 text-white'>
+                      <h3 className='font-[family-name:var(--font-hanken)] text-2xl font-bold leading-10 text-white'>
                         {member.name}
-                      </h5>
+                      </h3>
                       <p className='font-[family-name:var(--font-noto)] text-base font-medium text-white/80'>
                         {member.role}
                       </p>
@@ -106,11 +111,17 @@ export default function Team({ teamMembers }: { teamMembers: TeamMember[] }) {
 
             {/* Pagination dots */}
             {maxIndex > 0 && (
-              <div className='mt-10 flex items-center justify-center gap-3'>
+              <div
+                className='mt-10 flex items-center justify-center gap-3'
+                role='group'
+                aria-label='Attorney carousel pages'
+              >
                 {Array.from({ length: maxIndex + 1 }).map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentIndex(i)}
+                    aria-label={`Go to page ${i + 1}`}
+                    aria-current={i === currentIndex ? 'true' : undefined}
                     className={`h-1.5 rounded-full transition-all ${
                       i === currentIndex ? 'w-12 bg-blue-600' : 'w-12 bg-gray-200'
                     }`}
