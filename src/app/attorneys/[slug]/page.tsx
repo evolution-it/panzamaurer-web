@@ -63,7 +63,7 @@ export default async function AttorneyProfilePage({
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
         {/* Profile Hero */}
         <section
           className='relative w-full overflow-hidden'
@@ -103,12 +103,12 @@ export default async function AttorneyProfilePage({
                 />
               </div>
             )}
-            {/* Desktop profile image */}
+            {/* Desktop profile image — hidden from screen readers to avoid duplicate announcement */}
             {imgSrc && (
-              <div className='relative hidden h-[280px] w-[240px] flex-shrink-0 lg:block'>
+              <div className='relative hidden h-[280px] w-[240px] flex-shrink-0 lg:block' aria-hidden='true'>
                 <Image
                   src={imgSrc}
-                  alt={attorney.name}
+                  alt=''
                   fill
                   className='rounded-t-xl object-cover object-top'
                 />

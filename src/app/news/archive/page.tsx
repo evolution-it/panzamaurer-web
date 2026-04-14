@@ -49,7 +49,7 @@ export default async function NewsArchivePage({
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full pt-[109px]'>
+      <main id='main-content' className='w-full pt-[109px]'>
         <PageHero title='News Archive' subtitle='More Firm News & Events' />
 
         <section className='bg-white'>
@@ -78,13 +78,16 @@ export default async function NewsArchivePage({
                       </div>
                     )}
                     <div className='flex flex-1 flex-col gap-3 p-6'>
-                      <p className='text-sm font-medium text-gray-400'>
+                      <time
+                        dateTime={post.date}
+                        className='text-sm font-medium text-gray-400'
+                      >
                         {new Date(post.date).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',
                         })}
-                      </p>
+                      </time>
                       <h3 className='font-[family-name:var(--font-hanken)] text-lg font-semibold leading-snug text-gray-950'>
                         {post.title}
                       </h3>
@@ -99,13 +102,21 @@ export default async function NewsArchivePage({
             </div>
 
             {totalPages > 1 && (
-              <div className='mt-12 flex items-center justify-center gap-2'>
+              <nav aria-label='Pagination' className='mt-12 flex items-center justify-center gap-2'>
                 <PaginationLink
                   href={`/news/archive?page=${clampedPage - 1}`}
                   disabled={clampedPage === 1}
                   aria-label='Previous page'
                 >
-                  <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                  <svg
+                    className='h-4 w-4'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
+                    strokeWidth={2}
+                    aria-hidden='true'
+                    focusable='false'
+                  >
                     <path strokeLinecap='round' strokeLinejoin='round' d='M15 19l-7-7 7-7' />
                   </svg>
                 </PaginationLink>
@@ -115,6 +126,7 @@ export default async function NewsArchivePage({
                     key={p}
                     href={`/news/archive?page=${p}`}
                     active={p === clampedPage}
+                    aria-label={`Page ${p}`}
                   >
                     {p}
                   </PaginationLink>
@@ -125,11 +137,19 @@ export default async function NewsArchivePage({
                   disabled={clampedPage === totalPages}
                   aria-label='Next page'
                 >
-                  <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                  <svg
+                    className='h-4 w-4'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
+                    strokeWidth={2}
+                    aria-hidden='true'
+                    focusable='false'
+                  >
                     <path strokeLinecap='round' strokeLinejoin='round' d='M9 5l7 7-7 7' />
                   </svg>
                 </PaginationLink>
-              </div>
+              </nav>
             )}
           </div>
         </section>
@@ -161,14 +181,19 @@ function PaginationLink({
 
   if (disabled) {
     return (
-      <span className={styles} aria-label={ariaLabel}>
+      <span className={styles} aria-label={ariaLabel} aria-disabled='true'>
         {children}
       </span>
     )
   }
 
   return (
-    <Link href={href} className={styles} aria-label={ariaLabel}>
+    <Link
+      href={href}
+      className={styles}
+      aria-label={ariaLabel}
+      aria-current={active ? 'page' : undefined}
+    >
       {children}
     </Link>
   )

@@ -85,9 +85,9 @@ export default async function Locations({
                   )}
 
                   <div className='absolute inset-x-0 bottom-0 p-6'>
-                    <p className='font-[family-name:var(--font-noto)] text-2xl font-medium leading-10 text-white'>
+                    <h3 className='font-[family-name:var(--font-noto)] text-2xl font-medium leading-10 text-white'>
                       {location.name}
-                    </p>
+                    </h3>
                   </div>
                 </div>
               )

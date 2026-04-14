@@ -68,7 +68,7 @@ export default async function PracticeAreaDetailPage({
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
         {/* Hero */}
         <section
           className='relative w-full rounded-br-[30px]'
@@ -177,6 +177,8 @@ export default async function PracticeAreaDetailPage({
                       viewBox='0 0 24 24'
                       stroke='currentColor'
                       strokeWidth={2}
+                      aria-hidden='true'
+                      focusable='false'
                     >
                       <path strokeLinecap='round' strokeLinejoin='round' d='M9 5l7 7-7 7' />
                     </svg>

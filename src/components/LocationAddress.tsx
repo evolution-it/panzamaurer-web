@@ -31,8 +31,23 @@ export default function LocationAddress({ building, address, city, phone, fax }:
       </div>
       {(phone || fax) && (
         <div className='pl-[30px]'>
-          {phone && <p className='text-gray-950'>{phone} (T)</p>}
-          {fax && <p className='text-gray-950'>{fax} (F)</p>}
+          {phone && (
+            <p className='text-gray-950'>
+              <a
+                href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                className='hover:underline'
+                aria-label={`Phone: ${phone}`}
+              >
+                {phone}
+              </a>
+              {' '}(T)
+            </p>
+          )}
+          {fax && (
+            <p className='text-gray-950' aria-label={`Fax: ${fax}`}>
+              {fax} (F)
+            </p>
+          )}
         </div>
       )}
     </div>

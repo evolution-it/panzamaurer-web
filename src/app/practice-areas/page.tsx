@@ -29,7 +29,7 @@ export default async function PracticeAreasPage() {
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
         <PageHero title='Practice Areas' />
 
         <section className='bg-white'>
@@ -52,10 +52,11 @@ export default async function PracticeAreasPage() {
                   )}
                   <Link
                     href={`/practice-areas/${area.slug.current}`}
+                    aria-label={`View service: ${area.title}`}
                     className='mt-auto inline-flex items-center gap-2 text-sm font-medium text-primary-red transition-colors hover:text-red-800'
                   >
                     View Service
-                    <Image src='/images/arrow-up-right.svg' alt='' width={14} height={14} />
+                    <Image src='/images/arrow-up-right.svg' alt='' width={14} height={14} aria-hidden='true' />
                   </Link>
                 </div>
               ))}
