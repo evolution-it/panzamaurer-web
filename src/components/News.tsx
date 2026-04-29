@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { client } from '@/sanity/client'
+import { getDraftModeClient } from '@/sanity/draftMode'
 import { HOME_NEWS_QUERY } from '@/sanity/queries/news'
 
 type NewsItem = {
@@ -46,8 +46,10 @@ function NewsCard({ title, date, excerpt, slug }: NewsItem) {
 }
 
 export default async function News({ count = 3 }: { count?: number }) {
-  const newsItems: NewsItem[] = await client
-    .fetch(HOME_NEWS_QUERY, { count }, { next: { tags: ['news'] } })
+  const { sanityClient, cacheTags } = await getDraftModeClient()
+
+  const newsItems: NewsItem[] = await sanityClient
+    .fetch(HOME_NEWS_QUERY, { count }, cacheTags(['news', 'pages']))
     .catch(() => [])
 
   if (newsItems.length === 0) return null
@@ -86,11 +88,12 @@ export default async function News({ count = 3 }: { count?: number }) {
           )}
         </div>
 
-        {/* Row 2: Two cards */}
+        {/* Row 2+: remaining articles */}
         {newsItems.length > 1 && (
-          <div className='mt-8 flex flex-col gap-8 lg:flex-row'>
-            {newsItems[1] && <NewsCard {...newsItems[1]} />}
-            {newsItems[2] && <NewsCard {...newsItems[2]} />}
+          <div className='mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2'>
+            {newsItems.slice(1).map((item) => (
+              <NewsCard key={item._id} {...item} />
+            ))}
           </div>
         )}
       </div>
