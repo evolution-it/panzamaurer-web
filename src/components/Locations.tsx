@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { client } from '@/sanity/client'
 import { urlFor } from '@/sanity/image'
 import { LOCATIONS_QUERY } from '@/sanity/queries/locations'
@@ -10,12 +11,17 @@ type Location = {
   order: number
 }
 
+const locationCardClassName =
+  'group relative h-[250px] w-full overflow-hidden sm:h-[400px] lg:h-[500px] lg:flex-1'
+
 export default async function Locations({
   preloadedLocations,
   variant = 'default',
+  linkToLocationsPage = false,
 }: {
   preloadedLocations?: Location[]
   variant?: 'default' | 'grayscale'
+  linkToLocationsPage?: boolean
 }) {
   const locations: Location[] =
     preloadedLocations ??
@@ -42,11 +48,8 @@ export default async function Locations({
                 ? urlFor(location.image).width(800).height(500).url()
                 : null
 
-              return (
-                <div
-                  key={location._id}
-                  className={`group relative h-[250px] w-full overflow-hidden sm:h-[400px] lg:h-[500px] lg:flex-1`}
-                >
+              const cardContent = (
+                <>
                   {imgSrc ? (
                     <Image
                       src={imgSrc}
@@ -89,6 +92,20 @@ export default async function Locations({
                       {location.name}
                     </h3>
                   </div>
+                </>
+              )
+
+              return linkToLocationsPage ? (
+                <Link
+                  key={location._id}
+                  href='/locations'
+                  className={`${locationCardClassName} block cursor-pointer outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white`}
+                >
+                  {cardContent}
+                </Link>
+              ) : (
+                <div key={location._id} className={locationCardClassName}>
+                  {cardContent}
                 </div>
               )
             })}
