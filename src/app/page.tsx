@@ -8,7 +8,7 @@ import News from '@/components/News'
 import Locations from '@/components/Locations'
 import GetInTouch from '@/components/GetInTouch'
 import Footer from '@/components/Footer'
-import { client } from '@/sanity/client'
+import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { TEAM_ATTORNEYS_QUERY } from '@/sanity/queries/attorneys'
 import { HOME_PAGE_QUERY } from '@/sanity/queries/pages'
@@ -65,8 +65,10 @@ function toTeamMembers(raw: RawTeamMember[]): TeamMember[] {
 }
 
 export default async function Home() {
-  const pageConfig: HomePageConfig | null = await client
-    .fetch(HOME_PAGE_QUERY, {}, { next: { tags: ['pages'] } })
+  const { sanityClient, cacheTags } = await getDraftModeClient()
+
+  const pageConfig: HomePageConfig | null = await sanityClient
+    .fetch(HOME_PAGE_QUERY, {}, cacheTags(['pages']))
     .catch(() => null)
 
   const sections = pageConfig?.sections ?? []
@@ -91,8 +93,8 @@ export default async function Home() {
   if (teamSection?.attorneys && teamSection.attorneys.length > 0) {
     teamMembers = toTeamMembers(teamSection.attorneys)
   } else {
-    const rawTeam: RawTeamMember[] = await client
-      .fetch(TEAM_ATTORNEYS_QUERY, {}, { next: { tags: ['attorneys'] } })
+    const rawTeam: RawTeamMember[] = await sanityClient
+      .fetch(TEAM_ATTORNEYS_QUERY, {}, cacheTags(['attorneys']))
       .catch(() => [])
     teamMembers = toTeamMembers(rawTeam)
   }
@@ -128,7 +130,7 @@ export default async function Home() {
         />
         <PracticeAreas areas={practiceAreasSection?.practiceAreas ?? undefined} />
         <News count={newsCount} />
-        <Locations preloadedLocations={preloadedLocations} />
+        <Locations preloadedLocations={preloadedLocations} linkToLocationsPage />
       </main>
       <Footer />
     </div>
