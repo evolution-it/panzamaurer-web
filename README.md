@@ -52,3 +52,5 @@ npm run build   # Production build
 npm run start   # Start the production server
 npm run lint    # Run ESLint
 ```
+
+end
