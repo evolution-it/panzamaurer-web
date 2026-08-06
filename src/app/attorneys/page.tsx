@@ -143,7 +143,7 @@ export default async function AttorneysPage() {
           {
             _type: 'teamSection',
             _key: 'fallback-our-attorneys',
-            heading: 'Our Attorneys',
+            heading: 'Attorneys',
             attorneys: allAttorneys.filter((a) => a.type === 'Our Attorneys'),
           },
           {
