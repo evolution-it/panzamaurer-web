@@ -64,7 +64,7 @@ export default async function NewsArticlePage({
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[164px] lg:pt-[109px]'>
         {/* Hero */}
         <section
           className='relative w-full rounded-br-[30px]'

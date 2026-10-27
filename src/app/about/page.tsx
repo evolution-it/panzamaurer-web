@@ -33,7 +33,7 @@ export default async function AboutPage() {
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main id='main-content' className='w-full'>
+      <main id='main-content' className='w-full pt-[164px] lg:pt-[109px]'>
         <PageHero
           title={heroSection?.heading ?? 'About the Firm'}
           boldPrefix={heroSection?.boldPrefix ?? 'For more than five decades,'}

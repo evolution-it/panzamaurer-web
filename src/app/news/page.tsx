@@ -36,7 +36,7 @@ export default async function NewsPage() {
   return (
     <div className="flex min-h-screen flex-col items-center">
       <Navbar />
-      <main id="main-content" className="w-full pt-[109px]">
+      <main id="main-content" className="w-full pt-[164px] lg:pt-[109px]">
         <PageHero title="News" subtitle="Recent Firm News & Events" />
 
         <section className="bg-white">

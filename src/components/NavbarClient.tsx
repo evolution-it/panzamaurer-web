@@ -205,7 +205,7 @@ export default function NavbarClient({ navLinks, practiceAreaLinks, contactPhone
         {mobileOpen && (
           <div
             id="mobile-menu"
-            className="max-h-[calc(100svh-145px)] overflow-y-auto border-t border-gray-200 px-8 pb-6 lg:hidden"
+            className="max-h-[calc(100svh-164px)] overflow-y-auto border-t border-gray-200 px-8 pb-6 lg:hidden"
           >
             {navLinks.map((item) =>
               item.hasDropdown ? (

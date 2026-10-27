@@ -36,7 +36,7 @@ export default function ConsultingDetail({
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[164px] lg:pt-[109px]'>
         <section
           className='relative w-full rounded-br-[30px]'
           style={{
@@ -44,8 +44,8 @@ export default function ConsultingDetail({
               'linear-gradient(-57.8deg, rgba(100,116,139,0) 57.5%, rgba(0,105,255,0.1) 103.2%), linear-gradient(90deg, rgba(255,255,255,0) 20.3%, rgba(255,255,255,0.7) 85.8%), linear-gradient(90deg, rgba(229,233,241,0.8) 0%, rgba(229,233,241,0.8) 100%), linear-gradient(90deg, #f3f4f6 0%, #f3f4f6 100%)',
           }}
         >
-          <div className='mx-auto h-auto min-h-[160px] max-w-[1440px] pt-[100px] lg:h-[216px] lg:min-h-0 lg:pt-0'>
-            <div className='flex h-full flex-col items-center justify-center px-6 py-6 lg:pt-[36px] lg:pb-0'>
+          <div className='mx-auto h-auto max-w-[1440px] lg:h-[216px]'>
+            <div className='flex h-full flex-col items-center justify-center px-6 py-12 lg:pt-[36px] lg:pb-0'>
               <div className='flex w-[800px] max-w-full flex-col items-center gap-[15px] text-center'>
                 <span className='text-xs font-bold uppercase tracking-[3px] text-primary-red'>
                   {eyebrow}
