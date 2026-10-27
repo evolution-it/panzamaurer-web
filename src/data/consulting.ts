@@ -30,22 +30,16 @@ export const CONSULTING_TEAM: {
 
 export const CONSULTING_ONLY_ATTORNEYS = {
   'robin-supler': {
-    name: 'Robin Supler',
+    name: 'Robin Supler, JD, CHC, CHPC',
     firstName: 'Robin',
     role: 'Consultant',
     imageSrc: '/images/attorneys/robin-supler.jpeg',
     intro: [
-      'Robin Supler is an attorney with extensive experience in healthcare compliance, patient privacy, and risk management. Her background includes advising healthcare providers on compliance and fraud and abuse matters, developing institutional compliance programs, and overseeing privacy and research compliance.',
+      'Robin is a healthcare compliance and privacy professional with over 25 years of experience guiding healthcare organizations through regulatory complexity and operational transformation. Throughout her career, she has supported physicians and healthcare organizations in navigating complex regulatory environments, implementing effective compliance frameworks, and strengthening internal controls to ensure adherence to federal and state requirements.',
+      'Her extensive knowledge of federal and state healthcare laws, program requirements and best practices have led her to work with large public health systems, academic medical centers, physician practices, and seven university health colleges (Colleges of Allopathic Medicine, Dental Medicine, Nursing, Optometry, Osteopathic Medicine, Pharmacy and Psychology).',
+      'Her legal background and hands-on healthcare compliance experience enable her to translate complex regulatory requirements into practical policies and workflows that are clear, effective, and well suited for physician and staff education and implementation. The combination of compliance expertise and legal knowledge is a valuable addition to the Panza Maurer Solutions Consulting, enhancing our ability to address healthcare compliance from both a regulatory and business-risk perspective. Robin earned her Juris Doctor from the University of Miami School of Law and is certified in Healthcare Privacy Compliance (CHPC), and Healthcare Compliance (CHC).',
     ],
-    sections: [
-      {
-        title: 'Healthcare Compliance & Privacy',
-        paragraphs: [
-          'Robin’s career at Nova Southeastern University includes directing its Office of Compliance beginning in 1999 and her appointment as Vice President for Compliance and Chief Integrity Officer in 2013. Her responsibilities included oversight of healthcare and research compliance, serving as chief privacy officer for NSU’s Health Care Centers, and acting as privacy liaison to its Institutional Review Board.',
-          'Previously, Robin advised healthcare providers as a private consultant, served as a compliance liaison and risk manager for Memorial Healthcare System’s Medical Management Services Organization, and worked as a litigation specialist at Mount Sinai Medical Center in Miami Beach.',
-        ],
-      },
-    ],
+    sections: [],
     education: [
       'B.A. in Psychology from the University of Miami (1983)',
       'J.D. from the University of Miami (1986)',
