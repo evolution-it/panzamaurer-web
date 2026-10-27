@@ -28,7 +28,18 @@ export const CONSULTING_TEAM: {
   { slug: 'gregory-l-mcdermott', name: 'Gregory L. McDermott', role: 'Partner' },
 ]
 
-export const CONSULTING_ONLY_ATTORNEYS = {
+type ConsultingOnlyAttorney = {
+  name: string
+  firstName: string
+  role: string
+  imageSrc?: string
+  intro: string[]
+  sections: { title: string; paragraphs: string[] }[]
+  education: string[]
+  barAdmissions: string[]
+}
+
+export const CONSULTING_ONLY_ATTORNEYS: Record<string, ConsultingOnlyAttorney> = {
   'robin-supler': {
     name: 'Robin Supler, JD, CHC, CHPC',
     firstName: 'Robin',
