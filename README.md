@@ -18,6 +18,8 @@ The official public website for **Panza Maurer**, a full-service law firm based 
 | `/attorneys/[slug]` | Individual attorney profile |
 | `/practice-areas` | Full list of practice areas |
 | `/practice-areas/[slug]` | Individual practice area detail |
+| `/consulting` | Consulting overview and team |
+| `/consulting/[slug]` | Individual consulting service |
 | `/news` | News and updates listing |
 | `/news/[slug]` | Individual news article |
 | `/locations` | Office locations |
