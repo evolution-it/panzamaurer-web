@@ -5,13 +5,38 @@ import NavbarClient, { NavLink, PracticeAreaLink } from './NavbarClient'
 
 // Fallback nav in case Sanity is unavailable
 const FALLBACK_NAV: NavLink[] = [
-  { label: 'Home', href: '/' },
   { label: 'Professionals', href: '/attorneys' },
   { label: 'Practice Areas', href: '/practice-areas', hasDropdown: true },
   { label: 'Government Relations', href: '/practice-areas/government-relations' },
+  { label: 'Consulting', href: '/consulting' },
   { label: 'News', href: '/news' },
   { label: 'Locations', href: '/locations' },
 ]
+
+const CONSULTING_NAV: NavLink = { label: 'Consulting', href: '/consulting' }
+
+function withConsultingNav(links: NavLink[]): NavLink[] {
+  const withoutHome = links.filter(
+    (item) => item.href !== '/' && item.label.trim().toLowerCase() !== 'home',
+  )
+  const hasConsulting = withoutHome.some(
+    (item) => item.href === '/consulting' || item.label.trim().toLowerCase() === 'consulting',
+  )
+  if (hasConsulting) return withoutHome
+
+  const governmentRelationsIndex = withoutHome.findIndex(
+    (item) =>
+      item.href === '/practice-areas/government-relations' ||
+      item.label.trim().toLowerCase() === 'government relations',
+  )
+  if (governmentRelationsIndex === -1) return [...withoutHome, CONSULTING_NAV]
+
+  return [
+    ...withoutHome.slice(0, governmentRelationsIndex + 1),
+    CONSULTING_NAV,
+    ...withoutHome.slice(governmentRelationsIndex + 1),
+  ]
+}
 
 const FALLBACK_PRACTICE_AREAS: PracticeAreaLink[] = [
   { label: 'Administrative | Regulatory Law', slug: 'administrative--regulatory-law' },
@@ -55,14 +80,15 @@ export default async function Navbar() {
   ])
 
   // ── Top-level nav links ──────────────────────────────────────────────────
-  const navLinks: NavLink[] =
+  const navLinks: NavLink[] = withConsultingNav(
     settings?.navItems && settings.navItems.length > 0
       ? settings.navItems.map((item) => ({
           label: item.label,
           href: item.path,
           hasDropdown: item.hasDropdown ?? false,
         }))
-      : FALLBACK_NAV
+      : FALLBACK_NAV,
+  )
 
   // ── Practice areas dropdown ──────────────────────────────────────────────
   // Driven directly by the showInNavDropdown toggle on each practice area document.

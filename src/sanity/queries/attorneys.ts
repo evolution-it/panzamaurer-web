@@ -37,6 +37,16 @@ export const ATTORNEY_SLUGS_QUERY = groq`
   *[_type == "attorney" && status == "published"].slug.current
 `
 
+export const ATTORNEYS_BY_SLUGS_QUERY = groq`
+  *[_type == "attorney" && slug.current in $slugs] {
+    _id,
+    name,
+    role,
+    slug,
+    image
+  }
+`
+
 export const TEAM_ATTORNEYS_QUERY = groq`
   *[_type == "attorney" && status == "published" && type == "Our Attorneys"] | order(orderRank asc) [0...5] {
     _id,

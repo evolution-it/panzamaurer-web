@@ -7,6 +7,7 @@ import { client } from '@/sanity/client'
 import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { ATTORNEY_BY_SLUG_QUERY, ATTORNEY_SLUGS_QUERY } from '@/sanity/queries/attorneys'
+import { CONSULTING_ONLY_ATTORNEYS } from '@/data/consulting'
 
 type AttorneyDetail = {
   _id: string
@@ -25,14 +26,43 @@ type AttorneyDetail = {
   sections: { title: string; content: PortableTextBlock[] }[]
 }
 
+function localAttorney(slug: string): AttorneyDetail | null {
+  const local = CONSULTING_ONLY_ATTORNEYS[slug as keyof typeof CONSULTING_ONLY_ATTORNEYS]
+  if (!local) return null
+  return {
+    _id: slug,
+    name: local.name,
+    firstName: local.firstName,
+    role: local.role,
+    slug: { current: slug },
+    type: 'Featured Only',
+    status: 'published',
+    intro: [
+      {
+        _type: 'block',
+        _key: 'intro',
+        style: 'normal',
+        markDefs: [],
+        children: [{ _type: 'span', _key: 'intro-span', text: local.intro, marks: [] }],
+      },
+    ],
+    education: [],
+    barAdmissions: [],
+    courtAdmissions: [],
+    professionalMemberships: [],
+    sections: [],
+  }
+}
+
 export async function generateStaticParams() {
   const slugs: string[] = await client.fetch(ATTORNEY_SLUGS_QUERY).catch(() => [])
-  return slugs.map((slug) => ({ slug }))
+  return [...new Set([...slugs, ...Object.keys(CONSULTING_ONLY_ATTORNEYS)])].map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const attorney: AttorneyDetail | null = await client.fetch(ATTORNEY_BY_SLUG_QUERY, { slug })
+  const attorney: AttorneyDetail | null =
+    (await client.fetch(ATTORNEY_BY_SLUG_QUERY, { slug })) ?? localAttorney(slug)
   return {
     title: attorney ? `${attorney.name} | Panza Maurer` : 'Attorney | Panza Maurer',
   }
@@ -46,19 +76,21 @@ export default async function AttorneyProfilePage({
   const { slug } = await params
   const { sanityClient, cacheTags } = await getDraftModeClient()
 
-  const attorney: AttorneyDetail | null = await sanityClient.fetch(
-    ATTORNEY_BY_SLUG_QUERY,
-    { slug },
-    cacheTags(['attorneys']),
-  )
+  const attorney: AttorneyDetail | null =
+    (await sanityClient.fetch(ATTORNEY_BY_SLUG_QUERY, { slug }, cacheTags(['attorneys']))) ??
+    localAttorney(slug)
 
   if (!attorney) {
     notFound()
   }
 
-  const imgSrc = attorney.image
-    ? urlFor(attorney.image).width(480).height(560).url()
-    : null
+  const localImage =
+    CONSULTING_ONLY_ATTORNEYS[slug as keyof typeof CONSULTING_ONLY_ATTORNEYS]?.imageSrc
+  const imgSrc = localImage
+    ? localImage
+    : attorney.image
+      ? urlFor(attorney.image).width(480).height(560).url()
+      : null
 
   return (
     <div className='flex min-h-screen flex-col items-center'>

@@ -55,6 +55,8 @@ Each nav item has:
 
 Drag nav items to reorder them.
 
+The site omits a **Home** item from this list (the logo still links to `/`) and places **Consulting** (`/consulting`) immediately after **Government Relations** when that link is not already present.
+
 ---
 
 ## News Articles
