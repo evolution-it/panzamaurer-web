@@ -48,7 +48,7 @@ export default async function ContactPage() {
   return (
     <div className='flex min-h-screen flex-col items-center'>
       <Navbar />
-      <main id='main-content' className='w-full pt-[145px] lg:pt-[109px]'>
+      <main id='main-content' className='w-full pt-[164px] lg:pt-[109px]'>
         <PageHero
           title='Contact Us'
           subtitle='Every Second Counts! When you need serious counsel every second counts. Panza Maurer is ready to navigate a successful result. Our experienced strategic approach provides the foundation for every case we engage in. Please do not hesitate to contact us.'
