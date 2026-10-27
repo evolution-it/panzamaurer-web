@@ -88,34 +88,28 @@ export default async function NewsPage() {
                 );
               })}
             </div>
+
+            <nav aria-label="News archive" className="mt-12 flex items-center justify-center">
+              <Link
+                href="/news/archive"
+                className="inline-flex h-9 items-center gap-2 rounded-full border border-gray-300 px-4 text-sm font-medium text-gray-600 transition-colors hover:border-primary-red hover:text-primary-red"
+              >
+                News Archive
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </nav>
           </div>
         </section>
-        <Link
-          href="/news/archive"
-          className="group inline-flex items-center gap-3 text-sm font-semibold text-gray-500 transition-colors hover:text-primary-red"
-        >
-          News Archive
-          <span
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 transition-colors group-hover:border-primary-red group-hover:text-primary-red"
-            aria-hidden="true"
-          >
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5 12h14M12 5l7 7-7 7"
-              />
-            </svg>
-          </span>
-        </Link>
       </main>
       <Footer />
     </div>
