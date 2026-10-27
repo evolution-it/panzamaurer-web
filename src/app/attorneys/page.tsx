@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { ATTORNEYS_LIST_QUERY } from '@/sanity/queries/attorneys'
+import { isConsultingOnlyAttorney } from '@/data/consulting'
 import { PAGE_BY_SLUG_QUERY } from '@/sanity/queries/pages'
 
 export const metadata = {
@@ -133,7 +134,8 @@ export default async function AttorneysPage() {
       // Filter nulls from weak refs; fall back to lookup if GROQ returned partial data
       attorneys: (s.attorneys ?? [])
         .filter((a): a is AttorneyListItem => a != null && a.slug != null)
-        .map((a) => attorneyById[a._id] ?? a),
+        .map((a) => attorneyById[a._id] ?? a)
+        .filter((a) => !isConsultingOnlyAttorney(a.slug.current)),
     }))
 
   // Fallback: if no page config, show type-based groups
@@ -144,13 +146,17 @@ export default async function AttorneysPage() {
             _type: 'teamSection',
             _key: 'fallback-our-attorneys',
             heading: 'Attorneys',
-            attorneys: allAttorneys.filter((a) => a.type === 'Our Attorneys'),
+            attorneys: allAttorneys.filter(
+              (a) => a.type === 'Our Attorneys' && !isConsultingOnlyAttorney(a.slug.current),
+            ),
           },
           {
             _type: 'teamSection',
             _key: 'fallback-of-counsel',
             heading: 'Of Counsel',
-            attorneys: allAttorneys.filter((a) => a.type === 'Of Counsel'),
+            attorneys: allAttorneys.filter(
+              (a) => a.type === 'Of Counsel' && !isConsultingOnlyAttorney(a.slug.current),
+            ),
           },
         ]
       : []
