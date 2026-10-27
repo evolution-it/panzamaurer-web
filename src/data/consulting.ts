@@ -22,7 +22,7 @@ export const CONSULTING_TEAM: {
   {
     slug: 'robin-supler',
     name: 'Robin Supler',
-    role: 'Placeholder',
+    role: 'Consultant',
     imageSrc: '/images/attorneys/robin-supler.jpeg',
   },
   { slug: 'gregory-l-mcdermott', name: 'Gregory L. McDermott', role: 'Partner' },
@@ -32,11 +32,27 @@ export const CONSULTING_ONLY_ATTORNEYS = {
   'robin-supler': {
     name: 'Robin Supler',
     firstName: 'Robin',
-    role: 'Placeholder',
-    intro: 'Intro placeholder',
+    role: 'Consultant',
     imageSrc: '/images/attorneys/robin-supler.jpeg',
+    intro: [
+      'Robin L. Supler is an attorney with extensive experience in healthcare compliance, patient privacy, and risk management. Her background includes advising healthcare providers on compliance and fraud and abuse matters, developing institutional compliance programs, and overseeing privacy and research compliance.',
+    ],
+    sections: [
+      {
+        title: 'Healthcare Compliance & Privacy',
+        paragraphs: [
+          'Robin’s career at Nova Southeastern University includes directing its Office of Compliance beginning in 1999 and her appointment as Vice President for Compliance and Chief Integrity Officer in 2013. Her responsibilities included oversight of healthcare and research compliance, serving as chief privacy officer for NSU’s Health Care Centers, and acting as privacy liaison to its Institutional Review Board.',
+          'Previously, Robin advised healthcare providers as a private consultant, served as a compliance liaison and risk manager for Memorial Healthcare System’s Medical Management Services Organization, and worked as a litigation specialist at Mount Sinai Medical Center in Miami Beach.',
+        ],
+      },
+    ],
+    education: [
+      'B.A. in Psychology from the University of Miami (1983)',
+      'J.D. from the University of Miami (1986)',
+    ],
+    barAdmissions: ['Florida (1988)'],
   },
-} as const
+}
 
 export const CONSULTING_OVERVIEW = {
   eyebrow: 'Consulting & Strategic Advisory Services',
