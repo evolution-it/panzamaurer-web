@@ -7,7 +7,7 @@ import { client } from '@/sanity/client'
 import { getDraftModeClient } from '@/sanity/draftMode'
 import { urlFor } from '@/sanity/image'
 import { ATTORNEY_BY_SLUG_QUERY, ATTORNEY_SLUGS_QUERY } from '@/sanity/queries/attorneys'
-import { CONSULTING_ONLY_ATTORNEYS } from '@/data/consulting'
+import { CONSULTING_ONLY_ATTORNEYS, isConsultingOnlyAttorney } from '@/data/consulting'
 
 type AttorneyDetail = {
   _id: string
@@ -26,6 +26,16 @@ type AttorneyDetail = {
   sections: { title: string; content: PortableTextBlock[] }[]
 }
 
+function textBlock(key: string, text: string): PortableTextBlock {
+  return {
+    _type: 'block',
+    _key: key,
+    style: 'normal',
+    markDefs: [],
+    children: [{ _type: 'span', _key: `${key}-span`, text, marks: [] }],
+  } as PortableTextBlock
+}
+
 function localAttorney(slug: string): AttorneyDetail | null {
   const local = CONSULTING_ONLY_ATTORNEYS[slug as keyof typeof CONSULTING_ONLY_ATTORNEYS]
   if (!local) return null
@@ -37,20 +47,17 @@ function localAttorney(slug: string): AttorneyDetail | null {
     slug: { current: slug },
     type: 'Featured Only',
     status: 'published',
-    intro: [
-      {
-        _type: 'block',
-        _key: 'intro',
-        style: 'normal',
-        markDefs: [],
-        children: [{ _type: 'span', _key: 'intro-span', text: local.intro, marks: [] }],
-      },
-    ],
-    education: [],
-    barAdmissions: [],
+    intro: local.intro.map((text, index) => textBlock(`intro-${index}`, text)),
+    education: [...local.education],
+    barAdmissions: [...local.barAdmissions],
     courtAdmissions: [],
     professionalMemberships: [],
-    sections: [],
+    sections: local.sections.map((section, index) => ({
+      title: section.title,
+      content: section.paragraphs.map((text, paragraphIndex) =>
+        textBlock(`section-${index}-${paragraphIndex}`, text),
+      ),
+    })),
   }
 }
 
@@ -61,8 +68,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const attorney: AttorneyDetail | null =
-    (await client.fetch(ATTORNEY_BY_SLUG_QUERY, { slug })) ?? localAttorney(slug)
+  const attorney: AttorneyDetail | null = isConsultingOnlyAttorney(slug)
+    ? localAttorney(slug)
+    : await client.fetch(ATTORNEY_BY_SLUG_QUERY, { slug })
   return {
     title: attorney ? `${attorney.name} | Panza Maurer` : 'Attorney | Panza Maurer',
   }
@@ -76,9 +84,9 @@ export default async function AttorneyProfilePage({
   const { slug } = await params
   const { sanityClient, cacheTags } = await getDraftModeClient()
 
-  const attorney: AttorneyDetail | null =
-    (await sanityClient.fetch(ATTORNEY_BY_SLUG_QUERY, { slug }, cacheTags(['attorneys']))) ??
-    localAttorney(slug)
+  const attorney: AttorneyDetail | null = isConsultingOnlyAttorney(slug)
+    ? localAttorney(slug)
+    : await sanityClient.fetch(ATTORNEY_BY_SLUG_QUERY, { slug }, cacheTags(['attorneys']))
 
   if (!attorney) {
     notFound()
