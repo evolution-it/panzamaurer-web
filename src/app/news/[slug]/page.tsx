@@ -165,10 +165,10 @@ export default async function NewsArticlePage({
               </div>
 
               {/* Navigation */}
-              <div className='mt-12 flex items-center justify-between border-t border-gray-200 pt-8'>
+              <div className='mt-12 grid grid-cols-1 items-center gap-4 border-t border-gray-200 pt-8 sm:grid-cols-3'>
                 <Link
                   href='/news'
-                  className='group inline-flex items-center gap-3 text-sm font-semibold text-gray-500 transition-colors hover:text-primary-red'
+                  className='group inline-flex items-center gap-3 justify-self-start text-sm font-semibold text-gray-500 transition-colors hover:text-primary-red'
                 >
                   <span className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 transition-colors group-hover:border-primary-red group-hover:text-primary-red' aria-hidden='true'>
                     <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2} aria-hidden='true' focusable='false'>
@@ -179,14 +179,12 @@ export default async function NewsArticlePage({
                 </Link>
                 <Link
                   href='/news/archive'
-                  className='group inline-flex items-center gap-3 text-sm font-semibold text-gray-500 transition-colors hover:text-primary-red'
+                  className='inline-flex h-9 items-center justify-self-center gap-2 rounded-full border border-gray-300 px-4 text-sm font-medium text-gray-600 transition-colors hover:border-primary-red hover:text-primary-red sm:col-start-2'
                 >
                   News Archive
-                  <span className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 transition-colors group-hover:border-primary-red group-hover:text-primary-red' aria-hidden='true'>
-                    <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2} aria-hidden='true' focusable='false'>
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M5 12h14M12 5l7 7-7 7' />
-                    </svg>
-                  </span>
+                  <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2} aria-hidden='true' focusable='false'>
+                    <path strokeLinecap='round' strokeLinejoin='round' d='M9 5l7 7-7 7' />
+                  </svg>
                 </Link>
               </div>
             </div>

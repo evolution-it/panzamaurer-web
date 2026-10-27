@@ -35,7 +35,7 @@ export const CONSULTING_ONLY_ATTORNEYS = {
     role: 'Consultant',
     imageSrc: '/images/attorneys/robin-supler.jpeg',
     intro: [
-      'Robin L. Supler is an attorney with extensive experience in healthcare compliance, patient privacy, and risk management. Her background includes advising healthcare providers on compliance and fraud and abuse matters, developing institutional compliance programs, and overseeing privacy and research compliance.',
+      'Robin Supler is an attorney with extensive experience in healthcare compliance, patient privacy, and risk management. Her background includes advising healthcare providers on compliance and fraud and abuse matters, developing institutional compliance programs, and overseeing privacy and research compliance.',
     ],
     sections: [
       {
