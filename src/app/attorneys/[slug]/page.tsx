@@ -11,6 +11,7 @@ import { ATTORNEY_BY_SLUG_QUERY, ATTORNEY_SLUGS_QUERY } from '@/sanity/queries/a
 type AttorneyDetail = {
   _id: string
   name: string
+  profileName?: string
   firstName: string
   role: string
   slug: { current: string }
@@ -33,8 +34,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const attorney: AttorneyDetail | null = await client.fetch(ATTORNEY_BY_SLUG_QUERY, { slug })
+  const heading = attorney?.profileName || attorney?.name
   return {
-    title: attorney ? `${attorney.name} | Panza Maurer` : 'Attorney | Panza Maurer',
+    title: heading ? `${heading} | Panza Maurer` : 'Attorney | Panza Maurer',
   }
 }
 
@@ -57,6 +59,7 @@ export default async function AttorneyProfilePage({
   }
 
   const imgSrc = attorney.image ? urlFor(attorney.image).width(480).height(560).url() : null
+  const heading = attorney.profileName || attorney.name
 
   return (
     <div className='flex min-h-screen flex-col items-center'>
@@ -83,7 +86,7 @@ export default async function AttorneyProfilePage({
                 Profile
               </span>
               <h1 className='font-[family-name:var(--font-hanken)] text-3xl font-semibold text-slate-800 sm:text-4xl lg:text-[52px] lg:leading-[1.3]'>
-                {attorney.name}
+                {heading}
               </h1>
               <p className='font-[family-name:var(--font-noto)] text-lg text-slate-500'>
                 {attorney.role}

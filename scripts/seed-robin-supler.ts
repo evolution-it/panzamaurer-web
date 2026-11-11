@@ -142,7 +142,8 @@ async function run() {
   await client.createOrReplace({
     _id: ATTORNEY_ID,
     _type: 'attorney',
-    name: 'Robin Supler, JD, CHC, CHPC',
+    name: 'Robin Supler',
+    profileName: 'Robin Supler, JD, CHC, CHPC',
     firstName: 'Robin',
     slug: { _type: 'slug', current: SLUG },
     type: 'Our Attorneys',
