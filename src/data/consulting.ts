@@ -5,12 +5,6 @@ export type ConsultingService = {
   paragraphs: string[]
 }
 
-export const CONSULTING_ONLY_SLUGS = ['robin-supler'] as const
-
-export function isConsultingOnlyAttorney(slug: string) {
-  return (CONSULTING_ONLY_SLUGS as readonly string[]).includes(slug)
-}
-
 export const CONSULTING_TEAM: {
   slug: string
   name: string
@@ -22,42 +16,11 @@ export const CONSULTING_TEAM: {
   {
     slug: 'robin-supler',
     name: 'Robin Supler',
-    role: 'Consultant',
+    role: 'Partner',
     imageSrc: '/images/attorneys/robin-supler.jpeg',
   },
   { slug: 'gregory-l-mcdermott', name: 'Gregory L. McDermott', role: 'Partner' },
 ]
-
-type ConsultingOnlyAttorney = {
-  name: string
-  firstName: string
-  role: string
-  imageSrc?: string
-  intro: string[]
-  sections: { title: string; paragraphs: string[] }[]
-  education: string[]
-  barAdmissions: string[]
-}
-
-export const CONSULTING_ONLY_ATTORNEYS: Record<string, ConsultingOnlyAttorney> = {
-  'robin-supler': {
-    name: 'Robin Supler, JD, CHC, CHPC',
-    firstName: 'Robin',
-    role: 'Consultant',
-    imageSrc: '/images/attorneys/robin-supler.jpeg',
-    intro: [
-      'Robin is a healthcare compliance and privacy professional with over 25 years of experience guiding healthcare organizations through regulatory complexity and operational transformation. Throughout her career, she has supported physicians and healthcare organizations in navigating complex regulatory environments, implementing effective compliance frameworks, and strengthening internal controls to ensure adherence to federal and state requirements.',
-      'Her extensive knowledge of federal and state healthcare laws, program requirements and best practices have led her to work with large public health systems, academic medical centers, physician practices, and seven university health colleges (Colleges of Allopathic Medicine, Dental Medicine, Nursing, Optometry, Osteopathic Medicine, Pharmacy and Psychology).',
-      'Her legal background and hands-on healthcare compliance experience enable her to translate complex regulatory requirements into practical policies and workflows that are clear, effective, and well suited for physician and staff education and implementation. The combination of compliance expertise and legal knowledge is a valuable addition to Panza Maurer Solutions, enhancing our ability to address healthcare compliance from both a regulatory and business-risk perspective. Robin earned her Juris Doctor from the University of Miami School of Law and is certified in Healthcare Privacy Compliance (CHPC), and Healthcare Compliance (CHC).',
-    ],
-    sections: [],
-    education: [
-      'B.A. in Psychology from the University of Miami (1983)',
-      'J.D. from the University of Miami (1986)',
-    ],
-    barAdmissions: ['Florida (1988)'],
-  },
-}
 
 export const CONSULTING_OVERVIEW = {
   eyebrow: 'Consulting & Strategic Advisory Services',
