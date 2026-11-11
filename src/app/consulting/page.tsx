@@ -31,7 +31,7 @@ export default async function ConsultingPage() {
     const attorney = bySlug.get(member.slug)
     return {
       _id: attorney?._id ?? member.slug,
-      name: attorney?.name ?? member.name,
+      name: member.name,
       role: attorney?.role || member.role,
       slug: attorney?.slug?.current ?? member.slug,
       image: member.imageSrc ? null : (attorney?.image ?? null),

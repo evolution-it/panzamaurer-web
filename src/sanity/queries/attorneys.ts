@@ -15,6 +15,7 @@ export const ATTORNEY_BY_SLUG_QUERY = groq`
   *[_type == "attorney" && slug.current == $slug][0] {
     _id,
     name,
+    profileName,
     firstName,
     role,
     slug,

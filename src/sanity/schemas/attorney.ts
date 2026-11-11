@@ -9,8 +9,15 @@ export const attorney = defineType({
     defineField({
       name: 'name',
       title: 'Full Name',
+      description: 'Shown on attorney listings and cards',
       type: 'string',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'profileName',
+      title: 'Profile Heading',
+      description: 'Optional name shown on the profile page. Use this to include credentials.',
+      type: 'string',
     }),
     defineField({
       name: 'firstName',
